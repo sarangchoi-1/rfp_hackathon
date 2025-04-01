@@ -6,7 +6,7 @@ import requests
 
 load_dotenv()
 
-filename = "../your_file_name"  # Replace with your actual file name
+filename = "YOUR_FILE_NAME"  # ex: ./image.png
  
 url = "https://api.upstage.ai/v1/document-digitization"
 headers = {"Authorization": f"Bearer {os.getenv('UPSTAGE_API_KEY')}"}
