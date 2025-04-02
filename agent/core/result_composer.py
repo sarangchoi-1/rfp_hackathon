@@ -13,9 +13,8 @@ from typing import List, Dict
 from utils.logger import Logger
 from utils.validators import Validator
 from utils.exceptions import CompositionError
-from ..memory.short_term import ShortTermMemory
-from ..memory.working import WorkingMemory
 from datetime import datetime
+from ..memory.memory_system import MemorySystem
 
 class ResultComposer:
     """
@@ -29,8 +28,8 @@ class ResultComposer:
         self.validator = Validator()    # 데이터 검증을 위한 유틸리티
         
         # 메모리 시스템 초기화
-        self.short_term_memory = ShortTermMemory()  # 최근 작업 내용 저장
-        self.working_memory = WorkingMemory()      # 현재 작업 상태 저장
+        self.short_term_memory = MemorySystem()  # 최근 작업 내용 저장
+        self.working_memory = MemorySystem()      # 현재 작업 상태 저장
         
         # 기본 메타데이터 템플릿
         # 문서의 버전, 언어, 생성자 등의 기본 정보를 포함합니다

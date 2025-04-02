@@ -3,6 +3,7 @@ from langchain.prompts import PromptTemplate
 from langchain.output_parsers import PydanticOutputParser
 from pydantic import BaseModel
 from typing import List, Dict
+from langchain.chat_models import ChatOpenAI
 
 class SectionSchema(BaseModel):
     id: str
