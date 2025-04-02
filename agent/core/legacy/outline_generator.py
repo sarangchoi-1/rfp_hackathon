@@ -13,8 +13,8 @@ from typing import List, Dict, Optional
 from utils.logger import Logger
 from utils.validators import Validator
 from utils.exceptions import OutlineError
-from ..memory.short_term import ShortTermMemory
-from ..memory.long_term import LongTermMemory
+from ...memory.short_term import ShortTermMemory
+from ...memory.long_term import LongTermMemory
 from config.settings import Settings
 import numpy as np
 

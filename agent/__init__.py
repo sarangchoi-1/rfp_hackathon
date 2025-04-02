@@ -1,21 +1,24 @@
 """
-RFP Generation Agent Package
-Handles task decomposition, category matching, and result composition
-with memory system for improved performance.
+RFP 생성 에이전트 패키지
+작업 분해, 카테고리 매칭, 결과 구성 및 메모리 시스템을 통한 성능 향상을 처리합니다.
 """
 
-from .core.task_decomposer import TaskDecomposer
-from .core.category_matcher import CategoryMatcher
+from .core.task_chain2 import create_task_chain
+from .core.category_chain import create_category_chain
+from .core.outline_chain import create_outline_chain
 from .core.result_composer import ResultComposer
-from .memory.short_term import ShortTermMemory
-from .memory.long_term import LongTermMemory
-from .memory.working import WorkingMemory
+from .core.integration import AgentIntegration
+from .core.performance_monitoring import PerformanceMonitor
+from .core.agent_state import AgentState
+from .memory.memory_system import MemorySystem
 
 __all__ = [
-    'TaskDecomposer',
-    'CategoryMatcher',
+    'create_task_chain',
+    'create_category_chain',
+    'create_outline_chain',
     'ResultComposer',
-    'ShortTermMemory',
-    'LongTermMemory',
-    'WorkingMemory'
+    'AgentIntegration',
+    'PerformanceMonitor',
+    'AgentState',
+    'MemorySystem'
 ] 

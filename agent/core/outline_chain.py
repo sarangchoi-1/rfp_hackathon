@@ -18,22 +18,33 @@ class OutlineSchema(BaseModel):
     sections: List[SectionSchema]
     metadata: Dict
 
-def create_outline_chain():
-    prompt = PromptTemplate(
-        input_variables=["tasks", "category", "rag_results"],
-        template="""Generate an outline for:
-        Tasks: {tasks}
-        Category: {category}
-        RAG Results: {rag_results}
+class OutlineChain:
+    def __init__(self):
+        self.llm = ChatOpenAI(model="gpt-4", temperature=0)
+        self.parser = PydanticOutputParser(pydantic_object=OutlineSchema)
         
-        Consider domain-specific sections and maintain proper structure.
-        """
-    )
-    
-    output_parser = PydanticOutputParser(pydantic_object=OutlineSchema)
-    
-    return LLMChain(
-        llm=ChatOpenAI(),
-        prompt=prompt,
-        output_parser=output_parser
-    )
+        self.prompt = PromptTemplate(
+            template="""다음 작업 결과를 바탕으로 RFP 개요를 생성해주세요:
+            
+            작업 결과: {task_result}
+            카테고리: {categories}
+            
+            다음 형식으로 응답해주세요:
+            {format_instructions}
+            """,
+            input_variables=["task_result", "categories"],
+            partial_variables={"format_instructions": self.parser.get_format_instructions()}
+        )
+        
+        self.chain = self.prompt | self.llm | self.parser
+        
+    def invoke(self, task_result: Dict, categories: List[str]) -> Dict:
+        """개요를 생성합니다."""
+        return self.chain.invoke({
+            "task_result": task_result,
+            "categories": categories
+        })
+
+def create_outline_chain() -> OutlineChain:
+    """개요 생성 체인을 생성합니다."""
+    return OutlineChain()

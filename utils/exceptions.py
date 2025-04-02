@@ -14,3 +14,7 @@ class TaskError(RFPError):
 class ValidationError(RFPError):
     """Data validation errors"""
     pass
+
+class CompositionError(RFPError):
+    """Result composition errors"""
+    pass
