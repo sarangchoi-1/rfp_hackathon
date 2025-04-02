@@ -4,24 +4,26 @@ from langchain_openai import OpenAIEmbeddings
 embeddings = OpenAIEmbeddings()
 # 저장된 데이터를 로드
 loaded_case_db = FAISS.load_local(
-    folder_path="vector_db_case",
+    folder_path="./data/vector_db_case",
     embeddings=embeddings,
     allow_dangerous_deserialization=True,
-    index_name="case_case_1.pdf"
+    index_name="case_vector"
 )
 
 loaded_criteria_db = FAISS.load_local(
-    folder_path="vector_db_criteria",
+    folder_path="./data/vector_db_criteria",
     embeddings=embeddings,
     allow_dangerous_deserialization=True,
-    index_name="criteria_criteria_1.pdf"
+    index_name="criteria_vector"
 )
 
-# 검색 쿼리 입력
-query = "LNG 트럭용에 관한 RFP를 작성하려고 하는데 관련 사례를 찾아줘."
 
-# 검색 실행
-results = loaded_case_db.similarity_search(query)
+_case_retriever = loaded_case_db.as_retriever(k=3)
+_criteria_retriever = loaded_criteria_db.as_retriever(k=10)
+def get_case_retriever():
+    return _case_retriever
+def get_criteria_retriever():
+    return _criteria_retriever
 
-print(results)
-
+def double_retrieve(query):
+    return _case_retriever.invoke(query)+_criteria_retriever.invoke(query)
