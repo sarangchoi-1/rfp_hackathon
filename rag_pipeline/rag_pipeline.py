@@ -28,7 +28,7 @@ def generate_answer(context: List[str], query: str) -> str:
     {query}
     """
     response = openai_client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=[
             {"role": "system", "content": "너는 문서를 기반으로 응답하는 시스템이다. 오직 제공된 문서 내용만 사용해서 대답한다. 문서에 나오는 고유명사와 정보는 신뢰할 수 있으며, 활용해야 한다. 문서에 정보가 없으면 '해당 정보는 답변하기 어렵습니다.' 라고 답변한다."},
             {"role": "user", "content": prompt}
