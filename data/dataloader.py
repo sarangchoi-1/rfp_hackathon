@@ -48,7 +48,7 @@ for file in os.listdir("./data/data_source"):
     elif file.startswith("criteria_"): # 기준 데이터 로드   
         db_criteria.add_documents(documents=load_data(file_path))
 db_case.save_local(folder_path="./data/vector_db_case", index_name="case_vector")
-db_criteria.save_local(folder_path="./data/ vector_db_criteria", index_name="criteria_vector")
+db_criteria.save_local(folder_path="./data/vector_db_criteria", index_name="criteria_vector")
 
 
 
