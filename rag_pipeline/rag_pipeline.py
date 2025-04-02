@@ -5,19 +5,16 @@ from typing import List
 from dotenv import load_dotenv
 from pathlib import Path
 from openai import OpenAI
-from retriever import retrieve_context
+from data.Retrieve import double_retrieve
 
 env_path = Path(__file__).parent.parent / "config" / ".env"
 load_dotenv(dotenv_path=env_path)
 
-# API 키 불러오기
 UPSTAGE_API_KEY = os.getenv("UPSTAGE_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-# OpenAI 클라이언트
 openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
-# 5. LLM으로 응답 생성
 def generate_answer(context: List[str], query: str) -> str:
     context_text = "\n".join(context)
     prompt = f"""
@@ -40,8 +37,8 @@ def generate_answer(context: List[str], query: str) -> str:
     )
     return response.choices[0].message.content.strip()
 
-# 전체 파이프라인 함수
 def rag_pipeline(query: str) -> str:
-    context_chunks = retrieve_context(query)
-    answer = generate_answer(context_chunks, query)
+    documents = double_retrieve(query) 
+    context = [doc.page_content for doc in documents]
+    answer = generate_answer(context, query)
     return answer
