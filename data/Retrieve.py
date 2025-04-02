@@ -1,6 +1,5 @@
 from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
-
 embeddings = OpenAIEmbeddings()
 # 저장된 데이터를 로드
 loaded_case_db = FAISS.load_local(

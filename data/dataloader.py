@@ -7,6 +7,8 @@ import faiss
 from langchain_community.vectorstores import FAISS
 from langchain_community.docstore.in_memory import InMemoryDocstore
 from langchain.document_loaders import TextLoader
+#import crawring
+print("dataloader is loaded!")
 embeddings = OpenAIEmbeddings()
 dimension_size = len(embeddings.embed_query("hello world"))
 
@@ -25,15 +27,19 @@ db_criteria = FAISS(
 )
 def load_data(file_path):
     file_path = file_path
-    text_splitter = RecursiveCharacterTextSplitter( # 문장 분리
-        chunk_size=256,
-        chunk_overlap=64)
+
     if file_path.endswith(".pdf"):
+        text_splitter = RecursiveCharacterTextSplitter( # 문장 분리
+        chunk_size=1024,
+        chunk_overlap=256)
         loader = UpstageDocumentParseLoader(file_path, ocr="auto",api_key="up_gmnfyAHKJDRkVBrd8949aKfcK80EF",split="page",output_format="text",coordinates=False)
         pages = loader.load() 
         pages = text_splitter.split_documents(pages)
         return pages
     elif file_path.endswith(".txt"):
+        text_splitter = RecursiveCharacterTextSplitter( # 문장 분리
+        chunk_size=256,
+        chunk_overlap=64)
         loader = TextLoader(file_path, encoding='utf-8')
         pages = loader.load()
         pages = text_splitter.split_documents(pages)
