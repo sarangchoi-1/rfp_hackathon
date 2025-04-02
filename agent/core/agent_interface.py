@@ -245,7 +245,7 @@ class AgentInterface:
             rag_context = rag_pipeline(project_description)
             
             # Match categories
-            categories = self.category_matcher.match_categories(project_description)
+            categories = self.category_matcher.match_task_to_categories({"description": project_description})
             
             # Combine all context
             full_context = combined_info.get("additional_context", [])
@@ -293,10 +293,7 @@ class AgentInterface:
             })
             
             # Generate outline using outline chain
-            outline_result = self.outline_chain.invoke({
-                "task_result": task_result,
-                "categories": categories
-            })
+            outline_result = self.outline_chain.invoke(task_result, categories)
             
             # Compose final result
             final_result = self.result_composer.compose(

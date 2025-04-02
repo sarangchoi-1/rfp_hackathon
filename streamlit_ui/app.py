@@ -48,14 +48,31 @@ def display_outline(result: dict):
     if result["status"] == "success":
         st.success("제안서 개요가 성공적으로 생성되었습니다!")
         
+        # Display category and language
+        st.subheader("카테고리 및 언어")
+        st.write(f"카테고리: {result['outline']['category']}")
+        st.write(f"언어: {result['outline']['language']}")
+        
         # Display sections
         st.subheader("제안서 구성")
         for section in result["outline"]["sections"]:
-            st.markdown(f"- {section}")
+            st.markdown(f"### {section['title']}")
+            st.write(f"관련성 점수: {section['relevance']:.2f}")
+            
+            # Display subsections
+            for subsection in section["subsections"]:
+                st.markdown(f"- {subsection}")
+            
+            # Display relevant tasks
+            if section["relevant_tasks"]:
+                st.markdown("**관련 작업:**")
+                for task in section["relevant_tasks"]:
+                    st.markdown(f"- {task.get('description', '')}")
         
-        # Display details
-        st.subheader("상세 내용")
-        st.write(result["outline"]["details"])
+        # Display metadata
+        if result["outline"]["metadata"]:
+            st.subheader("메타데이터")
+            st.write(result["outline"]["metadata"])
     else:
         st.error(result["message"])
 
