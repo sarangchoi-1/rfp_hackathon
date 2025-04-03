@@ -7,6 +7,10 @@ import faiss
 from langchain_community.vectorstores import FAISS
 from langchain_community.docstore.in_memory import InMemoryDocstore
 from langchain_community.document_loaders import TextLoader
+from dotenv import load_dotenv
+
+load_dotenv()
+
 #import crawring
 print("dataloader is loaded!")
 embeddings = OpenAIEmbeddings()
@@ -35,7 +39,7 @@ def load_data(file_path):
         loader = UpstageDocumentParseLoader(
             file_path,
             ocr="auto",
-            api_key="up_gmnfyAHKJDRkVBrd8949aKfcK80EF",
+            api_key=os.getenv("UPSTAGE_API_KEY"),
             split="page",
             output_format="text",
             coordinates=False,
