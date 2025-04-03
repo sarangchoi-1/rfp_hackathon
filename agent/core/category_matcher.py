@@ -120,31 +120,53 @@ class CategoryMatcher:
             return 0.0
 
     def match_task_to_categories(self, task: Dict) -> List[Dict]:
-        """작업을 관련 카테고리와 매칭하는 메인 메서드 
-        Args:
-            task (Dict): 작업 정보 project_info
-        Returns:
-            List[Dict]: 정렬된된매칭된 카테고리 정보
-        """
-        try:
-            matches = []
-            task_text = task.get('description', '')
-            
-            for category, config in self.categories.items():
-                score = self.calculate_category_score(task_text, category)
-                if score > self.confidence_threshold:
-                    match = {
-                        'category_id': category,
-                        'score': score,
-                        'name': category,
-                        'weighted_score': score * config['weight']
-                    }
-                    matches.append(match)
-            
-            matches.sort(key=lambda x: x['weighted_score'], reverse=True)
-            logger.info(f"작업을 {len(matches)}개의 카테고리와 매칭")
-            return matches
+        """Match categories with caching."""
+        cached_matches = self.memory.cache.get(
+            "category_matches",
+            task=task
+        )
+        if cached_matches:
+            return cached_matches
 
-        except Exception as e:
-            logger.error(f"카테고리 매칭 중 오류 발생: {str(e)}")
-            return [] 
+        matches = []
+        task_text = task.get('description', '')
+        
+        for category, config in self.categories.items():
+            score = self.calculate_category_score(task_text, category)
+            if score > self.confidence_threshold:
+                match = {
+                    'category_id': category,
+                    'score': score,
+                    'name': category,
+                    'weighted_score': score * config['weight']
+                }
+                matches.append(match)
+        
+        matches.sort(key=lambda x: x['weighted_score'], reverse=True)
+        
+        self.memory.cache.set(
+            "category_matches",
+            matches,
+            task=task
+        )
+        return matches
+
+    def calculate_relevance(self, task_text: str, category: str) -> float:
+        """Calculate relevance with caching."""
+        cached_relevance = self.memory.cache.get(
+            "category_relevance",
+            task_text=task_text,
+            category=category
+        )
+        if cached_relevance is not None:
+            return cached_relevance
+
+        relevance = self._calculate_relevance_score(task_text, category)
+        
+        self.memory.cache.set(
+            "category_relevance",
+            relevance,
+            task_text=task_text,
+            category=category
+        )
+        return relevance 

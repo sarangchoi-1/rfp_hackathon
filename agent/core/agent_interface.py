@@ -14,7 +14,7 @@ from agent.core.outline_chain import create_outline_chain
 from agent.core.result_composer import ResultComposer
 from agent.core.performance_monitoring import PerformanceMonitor
 from agent.core.category_matcher import CategoryMatcher
-from rag_pipeline.rag_pipeline import double_retrieve, rag_pipeline
+from rag_pipeline.rag_pipeline import double_retrieve, RAGPipeline
 from langchain_openai import ChatOpenAI
 import json
 
@@ -30,9 +30,9 @@ class AgentInterface:
     RFP 생성을 위한 모든 컴포넌트를 통합하고 조정합니다.
     """
     
-    def __init__(self):
+    def __init__(self, memory_system):
         # Initialize core components
-        self.memory = MemorySystem()
+        self.memory = memory_system
         self.category_chain = create_category_chain()
         self.category_matcher = CategoryMatcher()
         self.purpose_chain = create_purpose_analysis_chain()
@@ -43,19 +43,18 @@ class AgentInterface:
         self.outline_chain = create_outline_chain()
         self.result_composer = ResultComposer()
         self.performance_monitor = PerformanceMonitor()
-        self.llm = ChatOpenAI()
+        self.llm = ChatOpenAI(
+            temperature=0.3,
+            model="gpt-3.5-turbo"  # You can specify the model here
+        )
         
         # Initialize conversation state
         self.conversation_state = {
-            "question": None,
-            "current_topic": None,
-            "last_question": None,
-            "follow_up_count": 0,
-            "extracted_info": {},
-            "missing_info": set(["project_name", "goal"] + [
-                "requirements", "constraints", "timeline", 
-                "budget", "stakeholders"
-            ])
+            "requirements": {},
+            "identified_topics": set(),
+            "confidence_scores": {},
+            "missing_information": set(),
+            "follow_up_count": 0
         }
         
         # Required fields for minimum viable outline
@@ -69,6 +68,19 @@ class AgentInterface:
 
     def analyze_conversation(self, project_info: Dict[str, Any], messages: List[Dict[str, str]]) -> Dict[str, Any]:
         """Analyze the conversation history to extract and track information."""
+        # Generate cache key
+        cache_key = self.memory.cache.generate_key(
+            "conversation_analysis",
+            project_info=str(project_info),
+            messages=str(messages)
+        )
+        
+        # Try to get from cache
+        cached_result = self.memory.cache.get(cache_key)
+        if cached_result:
+            return cached_result
+        
+        # If not in cache, perform analysis
         # Start performance monitoring
         self.performance_monitor.start_operation("conversation_analysis")
         
@@ -126,12 +138,16 @@ class AgentInterface:
                 "result_data": result_data
             })
             print('\n\n',result_dic,'\n\n')
-            return {
+            result = {
                 "next_topic": result_dic.get("next_topic", ""),
                 "conversation_context": result_dic.get("conversation_context", ""),
                 "extracted_info": result_data.get("extracted_info", {}),
                 "missing_info": result_dic.get("missing_info", [])
             }
+            
+            # Cache the result
+            self.memory.cache.set(cache_key, result)
+            return result
             
         finally:
             # End performance monitoring
@@ -139,7 +155,6 @@ class AgentInterface:
 
     def should_continue_conversation(self, project_info: Dict[str, Any]) -> bool:
         """Determine if more information is needed."""
-        # Start performance monitoring
         self.performance_monitor.start_operation("conversation_continuation_check")
         
         try:
@@ -149,169 +164,257 @@ class AgentInterface:
                 if project_info.get(field) or field in self.conversation_state["extracted_info"]
             ) / len(self.required_fields)
             
-            optional_completeness = sum(
-                1 for field in self.optional_fields 
-                if project_info.get(field) or field in self.conversation_state["extracted_info"]
-            ) / len(self.optional_fields)
+            # Check if we have enough basic information to start
+            if required_completeness >= 0.6:
+                # We have enough basic info - generate initial outline
+                if not self.conversation_state.get("initial_outline_generated"):
+                    self.conversation_state["initial_outline_generated"] = True
+                    return False  # Stop asking questions, show initial outline
             
-            # Overall completeness score (weighted towards required fields)
-            total_completeness = (required_completeness * 0.7) + (optional_completeness * 0.3)
+            # If we've asked too many follow-up questions, stop
+            if self.conversation_state["follow_up_count"] >= 3:
+                return False
             
-            # Continue if required fields are not complete or if we have significant missing optional info
-            return required_completeness < 0.8 or (total_completeness < 0.5 and self.conversation_state["follow_up_count"] < 3)
+            # Continue only if we're missing critical information
+            return required_completeness < 0.6
             
         finally:
-            # End performance monitoring
             self.performance_monitor.end_operation("conversation_continuation_check")
+
+    def analyze_user_uncertainty(self, message: str) -> Dict[str, Any]:
+        """Quickly analyze if the user is expressing uncertainty and about what topic."""
+        uncertainty_prompt = [
+            {
+                "role": "system",
+                "content": """사용자의 메시지에서 불확실성이나 추가 설명이 필요한 부분을 빠르게 분석하세요.
+                다음 형식으로 JSON으로 응답하세요:
+                {
+                    "is_uncertain": boolean,
+                    "topic": string or null,
+                    "needs_examples": boolean
+                }"""
+            },
+            {
+                "role": "user",
+                "content": message
+            }
+        ]
+        
+        try:
+            # Use invoke() instead of chat.completions.create
+            response = self.llm.invoke(uncertainty_prompt)
+            return json.loads(response.content)
+        except Exception as e:
+            logger.warning(f"Uncertainty analysis failed: {e}")
+            return {"is_uncertain": False, "topic": None, "needs_examples": False}
 
     def generate_next_question(self, project_info: Dict[str, Any], messages: List[Dict[str, str]]) -> str:
         """Generate the next question based on conversation history and current context."""
-        # Start performance monitoring
         self.performance_monitor.start_operation("question_generation")
         
         try:
             # Analyze the conversation
             analysis = self.analyze_conversation(project_info, messages)
             
-            # Get the current topic and missing information
-            current_topic = self.conversation_state["current_topic"]
-            missing_info = self.conversation_state["missing_info"]
+            # Get the current topic we're focusing on
+            current_topic = analysis.get("next_topic") or self.conversation_state.get("current_topic")
             
-            # Generate a contextual question
-            question_prompt = f"""
-            다음 정보를 바탕으로 자연스러운 다음 질문을 생성해주세요:
+            # Check user's last message for uncertainty
+            last_user_message = next((msg["content"] for msg in reversed(messages) if msg["is_user"]), "")
+            uncertainty_analysis = self.analyze_user_uncertainty(last_user_message)
             
-            현재 주제: {current_topic}
-            누락된 정보: {missing_info}
-            대화 맥락: {analysis.get('conversation_context', '')}
-            마지막 질문: {messages[-1]['content']}
+            # Always retrieve relevant examples for the current topic
+            rag_examples = double_retrieve(current_topic)
             
-            다음 규칙을 따라주세요:
-            1. 이전 대화 맥락을 고려하여 자연스러운 질문을 생성
-            2. 누락된 중요 정보를 우선적으로 요청
-            3. 사용자의 이전 답변을 참조하여 구체적인 후속 질문 생성
-            4. 대화가 자연스럽게 흐르도록 구성
-            """
-            print(question_prompt)
-            # Use the purpose chain to generate the question
-            question_result = self.purpose_chain.invoke({
-                "request": question_prompt,
-                "context": project_info.get("additional_context", [])
-            })
-            # Handle the response based on its type
-            if hasattr(question_result, 'function_call') and question_result.function_call:
-                # If it's a function call response, parse the arguments
-                result_data = json.loads(question_result.function_call.arguments)
-            elif hasattr(question_result, 'model_dump'):
-                # If it's a Pydantic model, convert to dict
-                result_data = question_result.model_dump()
+            if uncertainty_analysis["is_uncertain"]:
+                # Generate an explanatory response with examples
+                explanation_prompt = f"""
+                사용자가 {current_topic}에 대해 불확실해합니다.
+                
+                대화 맥락: {analysis.get('conversation_context', '')}
+                
+                관련 사례:
+                {rag_examples}
+                
+                다음 형식으로 응답해주세요:
+                1. 간단한 설명 (1-2문장)
+                2. 위의 관련 사례를 활용한 구체적인 예시
+                3. 하나의 명확한 후속 질문
+                """
+                
+                response_result = self.purpose_chain.invoke({
+                    "request": explanation_prompt,
+                    "context": project_info.get("additional_context", [])
+                })
             else:
-                # If it's already a dict, use it as is
-                result_data = question_result
-            result_dic=json.loads(result_data.get("additional_kwargs", {}).get("function_call", {}).get("arguments", {}).replace("\n", ' '))
-            # Update conversation state
-            self.conversation_state["last_question"] = self.conversation_state["question"]
-            self.conversation_state["follow_up_count"] += 1
-            print('\n\n',result_dic,'\n\n')
-            # Store in memory system using add_interaction
-            self.memory.add_interaction({
-                "type": "question_generation",
-                "state": self.conversation_state,
-                "result_data": result_data
-            })
+                # Focus on a single missing component with examples
+                missing_info = analysis.get("missing_info", [])
+                if not missing_info:
+                    return "지금까지 제공해주신 정보를 바탕으로 RFP를 작성하도록 하겠습니다."
+                
+                # Select the first missing item to focus on
+                focus_topic = missing_info[0]
+                
+                question_prompt = f"""
+                다음 정보를 바탕으로 하나의 구체적인 질문을 생성해주세요:
+                
+                집중할 주제: {focus_topic}
+                현재 맥락: {analysis.get('conversation_context', '')}
+                
+                관련 사례:
+                {rag_examples}
+                
+                다음 형식으로 응답해주세요:
+                1. 관련 사례를 활용한 짧은 예시 설명
+                2. 그 맥락에서 이어지는 하나의 구체적인 질문
+                
+                규칙:
+                - 반드시 하나의 질문만 하세요
+                - 예시를 먼저 언급한 후 자연스럽게 질문으로 이어가세요
+                - 이전 답변을 참조하여 맥락을 유지하세요
+                """
+                
+                response_result = self.purpose_chain.invoke({
+                    "request": question_prompt,
+                    "context": project_info.get("additional_context", [])
+                })
             
-            return self.conversation_state["question"]
-            
-        finally:
-            # End performance monitoring
-            self.performance_monitor.end_operation("question_generation")
+            # Extract just the question from the response
+            if hasattr(response_result, 'content'):
+                content = response_result.content
+                # If the content is a structured analysis, extract just the question
+                if "누락된 정보에 대한 질문" in content:
+                    # Find the questions section and extract the first question
+                    questions_section = content.split("누락된 정보에 대한 질문")[1]
+                    questions = [q.strip('- ').strip() for q in questions_section.split('\n') if q.strip().startswith('-')]
+                    if questions:
+                        return questions[0]  # Return just the first question
+                
+                # If it's a direct question (not in analysis format), return it as is
+                if '?' in content:
+                    return content
 
-    def generate_outline(self, project_info: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        프로젝트 정보를 기반으로 RFP 개요를 생성합니다.
-        
-        Args:
-            project_info (Dict): 프로젝트 정보
+            # Fallback to generate a simple question about missing info
+            missing_info = self.conversation_state.get("missing_info", [])
+            if missing_info:
+                return f"{missing_info[0]}에 대해 좀 더 자세히 알려주실 수 있나요?"
             
-        Returns:
-            Dict: 생성된 RFP 개요
-        """
-        # Start performance monitoring
-        self.performance_monitor.start_operation("outline_generation")
-        
-        try:
-            # Combine project info with extracted information from conversation
-            combined_info = {
-                **project_info,
-                **self.conversation_state["extracted_info"]
-            }
-            
-            # Prepare project description for RAG
-            project_description = f"{combined_info.get('project_name', '')} - {combined_info.get('goal', '')} - {combined_info.get('additional_context', '')}"
-            
-            # 주어진 쿼리와 관련된 문서를 검색
-            rag_context = double_retrieve(project_description+"""목적', '목표', '배경', '필요성', 'why', 'purpose', 'objective',
-                    '기대효과', '기대', '성과', '효과', 'outcome', 'impact', 'benefit',
-                    '문제', '현황', '상황', 'problem', 'status', 'situation'
-                    '목적', '목표', '배경', '필요성', 'why', 'purpose', 'objective',
-                    '기대효과', '기대', '성과', '효과', 'outcome', 'impact', 'benefit',
-                    '문제', '현황', '상황', 'problem', 'status', 'situation'" "범위 정의""")
-            
-            # Match categories
-            set_of_categories = self.category_matcher.match_task_to_categories({"description": project_description})
-            categories = [category['category_id'] for category in set_of_categories][:3]
-            
-            # Combine all context
-            full_context = combined_info.get("additional_context", [])
-            if rag_context:
-                full_context.append(f"관련 사례 및 참고 정보: {rag_context}")
-            # 기능별로 html을 반환하는 AI를 사용하고 그 결과를 합함.
-            # Generate purpose analysis with RAG context
-            purpose_result = rag_pipeline(full_context, "목적 및 배경을 소개해주세요")
-            full_context = combined_info.get("additional_context", [])
-            scope_result = rag_pipeline(context=(full_context+ [doc.page_content for doc in double_retrieve(project_description+
-                    """ '범위', '규모', '기간', '대상', 'scope', 'scale', 'timeline',
-                    '예산', '비용', '금액', '재정', 'budget', 'cost', 'financial',
-                    '인력', '자원', '리소스', 'resource', 'manpower', 'staff'""")]), query="금액, 예산, 인력, 규모, 기간, 대상, 범위 등을 소개해 주세요요")
-            full_context = combined_info.get("additional_context", [])
-            case_result = rag_pipeline(full_context+ [doc.page_content for doc in double_retrieve(project_description+
-                    """'사례', '예시', '참고', '벤치마크', 'case', 'example', 'reference',
-                    '표준', '기준', '업계', '시장', 'standard', 'industry', 'market',
-                    '방법론', '기술', '접근', 'methodology', 'technology', 'approach'""")], query='사례, 예시, 참고, 벤치마크, 기준, 업계, 시장, 기술, 접근 등을 소개해 주세요')
-            full_context = combined_info.get("additional_context", [])
-            eval_result = rag_pipeline(full_context+ [doc.page_content for doc in double_retrieve(project_description+
-                    """'평가', '기준', '지표', '점수', 'evaluation', 'criteria', 'metrics',
-                    '정성', '질적', '주관', 'qualitative', 'subjective', 'quality',
-                    '산출물', '결과물', '성과물', 'deliverable', 'output', 'result'""")], query='평가 기준, 배점, 결과물의 형식, 점수 지표 등을 정해주세요')
-            # Generate tasks with RAG context
-            full_context = combined_info.get("additional_context", [])
-            
-            
-            task_result = rag_pipeline(full_context+ [doc.page_content for doc in double_retrieve(project_description+" 요구사항, 요청사항을 작성해주세요")], query=project_description)
-            # Generate outline using outline chain            
-            # Compose final result
-            final_result = purpose_result+'\n\n'+scope_result+'\n\n'+case_result+'\n\n'+eval_result+'\n\n'+task_result
-            
-            return {
-                "status": "success",
-                "outline": final_result,
-                "metadata": {
-                    "has_rag_context": bool(rag_context),
-                    "categories": categories,
-                    "performance_metrics": self.performance_monitor.get_metrics()
-                }
-            }
+            return "프로젝트에 대해 더 자세히 설명해 주시겠어요?"
             
         except Exception as e:
-            logger.error(f"개요 생성 중 오류 발생: {str(e)}")
-            return {
-                "status": "error",
-                "message": str(e),
-                "outline": None
-            }
-            
+            print(f"Error in generate_next_question: {e}")
+            return "죄송합니다. 응답을 생성하는 중에 오류가 발생했습니다."
+        
         finally:
-            # End performance monitoring
-            self.performance_monitor.end_operation("outline_generation") 
+            self.performance_monitor.end_operation("question_generation")
+
+    def generate_outline(self, project_info: Dict[str, Any]) -> Dict[str, str]:
+        """Generate RFP outline based on project information."""
+        try:
+            # Generate the outline
+            result = self.purpose_chain.invoke({
+                "request": "Generate RFP outline",
+                "context": project_info
+            })
+            
+            # Log the result for debugging
+            print("Generated outline:", result)
+            
+            return {
+                "outline": result,
+                "status": "success"
+            }
+        except Exception as e:
+            print(f"Error generating outline: {e}")
+            return {
+                "outline": "<p>오류가 발생했습니다.</p>",
+                "status": "error"
+            }
+
+    def analyze_conversation_realtime(self, message: Dict[str, str], project_info: Dict[str, Any]) -> Dict[str, Any]:
+        """Analyze each message in real-time as it arrives."""
+        # Try cache first
+        cache_key = {
+            "message": message,
+            "current_state": self.conversation_state,
+            "project_info": project_info
+        }
+        
+        cached_analysis = self.memory.cache.get("realtime_analysis", **cache_key)
+        if cached_analysis:
+            self._update_conversation_state(cached_analysis)
+            return cached_analysis
+
+        # Perform incremental analysis
+        analysis = {
+            "new_requirements": self._extract_requirements(message),
+            "new_topics": self._identify_topics(message),
+            "confidence_updates": self._update_confidence(message),
+            "missing_info": self._identify_missing_information(message, project_info)
+        }
+
+        # Update conversation state
+        self._update_conversation_state(analysis)
+
+        # Cache the analysis
+        self.memory.cache.set("realtime_analysis", analysis, **cache_key)
+        return analysis
+
+    def _update_conversation_state(self, analysis: Dict[str, Any]) -> None:
+        """Update the conversation state with new analysis."""
+        self.conversation_state["requirements"].update(analysis["new_requirements"])
+        self.conversation_state["identified_topics"].update(analysis["new_topics"])
+        self.conversation_state["confidence_scores"].update(analysis["confidence_updates"])
+        self.conversation_state["missing_information"].update(analysis["missing_info"])
+
+    def _extract_requirements(self, message: Dict[str, str]) -> Dict[str, Any]:
+        """Extract requirements from any type of user message."""
+        prompt = f"""
+        From the following message, identify any project requirements or important information.
+        Group them naturally based on their content, without forcing them into predefined categories.
+        
+        Message: {message['content']}
+        """
+        
+        requirements = self.llm.invoke(prompt)
+        return {
+            "identified_requirements": requirements.content,
+            "confidence": requirements.additional_kwargs.get("confidence", 0.0)
+        }
+
+    def _identify_topics(self, message: Dict[str, str]) -> set:
+        """Identify new topics from a message."""
+        # Implementation would use category matching and topic extraction
+        return set()
+
+    def _update_confidence(self, message: Dict[str, str]) -> Dict[str, float]:
+        """Update confidence scores for existing requirements."""
+        # Implementation would assess confidence in current understanding
+        return {}
+
+    def _identify_missing_information(self, message: Dict[str, str], project_info: Dict[str, Any]) -> set:
+        """Identify what information is still needed."""
+        # Implementation would compare current state against required information
+        return set()
+
+    def progressive_outline_update(self, message: Dict[str, str], project_info: Dict[str, Any]) -> Dict[str, Any]:
+        """Update the RFP outline based on any new information."""
+        current_outline = self.memory.get_state().get("current_outline", {})
+        
+        # Extract information without forcing categorization
+        new_info = self._extract_requirements(message)
+        
+        # Dynamically update relevant sections based on content
+        if new_info["identified_requirements"]:
+            current_outline["requirements"] = current_outline.get("requirements", [])
+            current_outline["requirements"].append({
+                "content": new_info["identified_requirements"],
+                "confidence": new_info["confidence"]
+            })
+        
+        return {
+            "outline": current_outline,
+            "changes": new_info
+        }
 
 print("agent_interface.py 실행완료")

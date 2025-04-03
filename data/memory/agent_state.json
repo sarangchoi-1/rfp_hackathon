@@ -4,8 +4,5 @@
     {
       "type": "conversation_analysis",
       "state": {
-        "current_topic": "",
-        "last_question": "",
-        "follow_up_count": 1,
-        "extracted_info": {},
-        "missing_info": 
+        "requirements": {},
+        "identified_topics": 

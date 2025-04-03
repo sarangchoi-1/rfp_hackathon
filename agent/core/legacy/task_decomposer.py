@@ -9,9 +9,9 @@ from typing import List, Dict
 from utils.logger import Logger
 from utils.validators import Validator
 from utils.exceptions import TaskError
-from ..memory.short_term import ShortTermMemory
-from ..memory.long_term import LongTermMemory
-from ..memory.working import WorkingMemory
+from ...memory.short_term import ShortTermMemory
+from ...memory.long_term import LongTermMemory
+from ...memory.working import WorkingMemory
 import uuid
 import re
 

@@ -5,6 +5,7 @@ from pathlib import Path
 import json
 from .memory_state import AgentState
 from utils.logger import Logger
+from .cache_system import CacheSystem
 
 class MemorySystem:
     """
@@ -13,7 +14,8 @@ class MemorySystem:
     """
     
     def __init__(self):
-        self.logger = Logger(__name__)
+        self.logger = Logger(__name__)       
+        self.cache = CacheSystem()
         self.state: AgentState = {
             "patterns": {},
             "recent_context": [],
@@ -29,6 +31,7 @@ class MemorySystem:
         
         # 상태 로드
         self._load_state()
+        
         
     def save_pattern(self, pattern_key: str, pattern_data: Dict) -> bool:
         """장기 패턴 저장"""
