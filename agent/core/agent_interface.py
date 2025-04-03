@@ -47,6 +47,7 @@ class AgentInterface:
         
         # Initialize conversation state
         self.conversation_state = {
+            "question": None,
             "current_topic": None,
             "last_question": None,
             "follow_up_count": 0,
@@ -98,20 +99,24 @@ class AgentInterface:
             # Handle the response based on its type
             if hasattr(analysis_result, 'function_call') and analysis_result.function_call:
                 # If it's a function call response, parse the arguments
+                print("json.loads")
                 result_data = json.loads(analysis_result.function_call.arguments)
             elif hasattr(analysis_result, 'model_dump'):
                 # If it's a Pydantic model, convert to dict
+                print("model_dump")
                 result_data = analysis_result.model_dump()
             else:
                 # If it's already a dict, use it as is
+                print("dict")
                 result_data = analysis_result
-            
+            result_dic=json.loads(result_data.get("additional_kwargs", {}).get("function_call", {}).get("arguments", {}).replace("\n", ' '))
             # Update conversation state using the result data
             self.conversation_state.update({
-                "current_topic": result_data.get("next_topic", ""),
+                "current_topic": result_dic.get("next_topic", ""),
                 "extracted_info": result_data.get("extracted_info", {}),
-                "missing_info": set(result_data.get("missing_info", [])),
-                "conversation_context": result_data.get("conversation_context", "")
+                "missing_info": result_dic.get("missing_info", []),
+                "conversation_context": result_dic.get("conversation_context", ""),
+                "question": result_dic.get("question", "")
             })
             
             # Store in memory system using add_interaction
@@ -120,12 +125,12 @@ class AgentInterface:
                 "state": self.conversation_state,
                 "result_data": result_data
             })
-            
+            print('\n\n',result_dic,'\n\n')
             return {
-                "next_topic": result_data.get("next_topic", ""),
-                "conversation_context": result_data.get("conversation_context", ""),
+                "next_topic": result_dic.get("next_topic", ""),
+                "conversation_context": result_dic.get("conversation_context", ""),
                 "extracted_info": result_data.get("extracted_info", {}),
-                "missing_info": result_data.get("missing_info", [])
+                "missing_info": result_dic.get("missing_info", [])
             }
             
         finally:
@@ -178,8 +183,8 @@ class AgentInterface:
             
             현재 주제: {current_topic}
             누락된 정보: {missing_info}
-            대화 맥락: {self.conversation_state['conversation_context']}
-            마지막 질문: {self.conversation_state['last_question']}
+            대화 맥락: {analysis.get('conversation_context', '')}
+            마지막 질문: {messages[-1]['content']}
             
             다음 규칙을 따라주세요:
             1. 이전 대화 맥락을 고려하여 자연스러운 질문을 생성
@@ -187,13 +192,12 @@ class AgentInterface:
             3. 사용자의 이전 답변을 참조하여 구체적인 후속 질문 생성
             4. 대화가 자연스럽게 흐르도록 구성
             """
-            
+            print(question_prompt)
             # Use the purpose chain to generate the question
             question_result = self.purpose_chain.invoke({
                 "request": question_prompt,
                 "context": project_info.get("additional_context", [])
             })
-            
             # Handle the response based on its type
             if hasattr(question_result, 'function_call') and question_result.function_call:
                 # If it's a function call response, parse the arguments
@@ -204,11 +208,11 @@ class AgentInterface:
             else:
                 # If it's already a dict, use it as is
                 result_data = question_result
-            
+            result_dic=json.loads(result_data.get("additional_kwargs", {}).get("function_call", {}).get("arguments", {}).replace("\n", ' '))
             # Update conversation state
-            self.conversation_state["last_question"] = result_data.get("question", "")
+            self.conversation_state["last_question"] = self.conversation_state["question"]
             self.conversation_state["follow_up_count"] += 1
-            
+            print('\n\n',result_dic,'\n\n')
             # Store in memory system using add_interaction
             self.memory.add_interaction({
                 "type": "question_generation",
@@ -216,7 +220,7 @@ class AgentInterface:
                 "result_data": result_data
             })
             
-            return result_data.get("question", "프로젝트에 대해 더 자세히 알려주실 수 있을까요?")
+            return self.conversation_state["question"]
             
         finally:
             # End performance monitoring

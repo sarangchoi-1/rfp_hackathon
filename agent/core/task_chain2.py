@@ -69,13 +69,14 @@ def create_purpose_analysis_chain():
         6. 대화 맥락 (conversation_context)
         7. 추출된 정보 (extracted_info)
         8. 누락된 정보 (missing_info)
+        9. 누락된 정보에 대한 질문 (question)
         
         각 항목에 대해 구체적이고 명확한 설명을 제공해주세요.""")
     ])
     
     chain = prompt | llm.bind(functions=[{
         "name": "analyze_purpose",
-        "description": "Analyze project purpose and objectives",
+        "description": "목적과 목표를 한국어로 분석해주세요.",
         "parameters": {
             "type": "object",
             "properties": {
@@ -86,10 +87,11 @@ def create_purpose_analysis_chain():
                 "next_topic": {"type": "string"},
                 "conversation_context": {"type": "string"},
                 "extracted_info": {"type": "object"},
-                "missing_info": {"type": "array", "items": {"type": "string"}}
+                "missing_info": {"type": "array", "items": {"type": "string"}},
+                "question": {"type": "string"}
             },
             "required": ["core_purpose", "problem_statement", "final_goal", "key_objectives", 
-                        "next_topic", "conversation_context", "extracted_info", "missing_info"]
+                        "next_topic", "conversation_context", "extracted_info", "missing_info", "question"]
         }
     }])
     return chain
