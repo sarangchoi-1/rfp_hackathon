@@ -29,8 +29,8 @@ db_criteria = FAISS(
 def load_data(file_path):
     if file_path.endswith(".pdf"):
         text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=1024,
-            chunk_overlap=256
+            chunk_size=512,
+            chunk_overlap=128
         )
         loader = UpstageDocumentParseLoader(
             file_path,

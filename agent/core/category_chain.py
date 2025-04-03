@@ -1,10 +1,20 @@
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
-from langchain.chains import LLMChain
-from langchain.prompts import PromptTemplate
 from typing import List, Dict
-import numpy as np
-from .category_matcher import CategoryMatcher
+import importlib.util
+import os
+import sys
+
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
+category_matcher_path = os.path.join(project_root, 'core', 'category_matcher.py')
+spec = importlib.util.spec_from_file_location("category_matcher", category_matcher_path)
+category_matcher = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(category_matcher)
+
+CategoryMatcher = category_matcher.CategoryMatcher
 
 class CategoryChain:
     def __init__(self):
@@ -37,7 +47,13 @@ class CategoryChain:
             raise ValueError("No categories provided for vectorstore initialization")
         
     def match_categories(self, text: str) -> List[Dict]:
-        """Match categories using both TF-IDF and embeddings."""
+        """Match categories using both TF-IDF and embeddings.
+        Args:
+            text (str): 쿼리
+            
+        Returns:
+            List[Dict]: 정렬된 매칭된 카테고리 정보
+        """
         # Get TF-IDF matches
         tfidf_results = self.tfidf_matcher.match_task_to_categories({"description": text})
         

@@ -14,9 +14,13 @@ from agent.core.outline_chain import create_outline_chain
 from agent.core.result_composer import ResultComposer
 from agent.core.performance_monitoring import PerformanceMonitor
 from agent.core.category_matcher import CategoryMatcher
-from rag_pipeline.rag_pipeline import rag_pipeline
+from rag_pipeline.rag_pipeline import double_retrieve, rag_pipeline
 from langchain_openai import ChatOpenAI
 import json
+
+
+
+
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +47,7 @@ class AgentInterface:
         
         # Initialize conversation state
         self.conversation_state = {
+            "question": None,
             "current_topic": None,
             "last_question": None,
             "follow_up_count": 0,
@@ -94,20 +99,24 @@ class AgentInterface:
             # Handle the response based on its type
             if hasattr(analysis_result, 'function_call') and analysis_result.function_call:
                 # If it's a function call response, parse the arguments
+                print("json.loads")
                 result_data = json.loads(analysis_result.function_call.arguments)
             elif hasattr(analysis_result, 'model_dump'):
                 # If it's a Pydantic model, convert to dict
+                print("model_dump")
                 result_data = analysis_result.model_dump()
             else:
                 # If it's already a dict, use it as is
+                print("dict")
                 result_data = analysis_result
-            
+            result_dic=json.loads(result_data.get("additional_kwargs", {}).get("function_call", {}).get("arguments", {}).replace("\n", ' '))
             # Update conversation state using the result data
             self.conversation_state.update({
-                "current_topic": result_data.get("next_topic", ""),
+                "current_topic": result_dic.get("next_topic", ""),
                 "extracted_info": result_data.get("extracted_info", {}),
-                "missing_info": set(result_data.get("missing_info", [])),
-                "conversation_context": result_data.get("conversation_context", "")
+                "missing_info": result_dic.get("missing_info", []),
+                "conversation_context": result_dic.get("conversation_context", ""),
+                "question": result_dic.get("question", "")
             })
             
             # Store in memory system using add_interaction
@@ -116,12 +125,12 @@ class AgentInterface:
                 "state": self.conversation_state,
                 "result_data": result_data
             })
-            
+            print('\n\n',result_dic,'\n\n')
             return {
-                "next_topic": result_data.get("next_topic", ""),
-                "conversation_context": result_data.get("conversation_context", ""),
+                "next_topic": result_dic.get("next_topic", ""),
+                "conversation_context": result_dic.get("conversation_context", ""),
                 "extracted_info": result_data.get("extracted_info", {}),
-                "missing_info": result_data.get("missing_info", [])
+                "missing_info": result_dic.get("missing_info", [])
             }
             
         finally:
@@ -174,8 +183,8 @@ class AgentInterface:
             
             현재 주제: {current_topic}
             누락된 정보: {missing_info}
-            대화 맥락: {self.conversation_state['conversation_context']}
-            마지막 질문: {self.conversation_state['last_question']}
+            대화 맥락: {analysis.get('conversation_context', '')}
+            마지막 질문: {messages[-1]['content']}
             
             다음 규칙을 따라주세요:
             1. 이전 대화 맥락을 고려하여 자연스러운 질문을 생성
@@ -183,13 +192,12 @@ class AgentInterface:
             3. 사용자의 이전 답변을 참조하여 구체적인 후속 질문 생성
             4. 대화가 자연스럽게 흐르도록 구성
             """
-            
+            print(question_prompt)
             # Use the purpose chain to generate the question
             question_result = self.purpose_chain.invoke({
                 "request": question_prompt,
                 "context": project_info.get("additional_context", [])
             })
-            
             # Handle the response based on its type
             if hasattr(question_result, 'function_call') and question_result.function_call:
                 # If it's a function call response, parse the arguments
@@ -200,11 +208,11 @@ class AgentInterface:
             else:
                 # If it's already a dict, use it as is
                 result_data = question_result
-            
+            result_dic=json.loads(result_data.get("additional_kwargs", {}).get("function_call", {}).get("arguments", {}).replace("\n", ' '))
             # Update conversation state
-            self.conversation_state["last_question"] = result_data.get("question", "")
+            self.conversation_state["last_question"] = self.conversation_state["question"]
             self.conversation_state["follow_up_count"] += 1
-            
+            print('\n\n',result_dic,'\n\n')
             # Store in memory system using add_interaction
             self.memory.add_interaction({
                 "type": "question_generation",
@@ -212,7 +220,7 @@ class AgentInterface:
                 "result_data": result_data
             })
             
-            return result_data.get("question", "프로젝트에 대해 더 자세히 알려주실 수 있을까요?")
+            return self.conversation_state["question"]
             
         finally:
             # End performance monitoring
@@ -239,69 +247,50 @@ class AgentInterface:
             }
             
             # Prepare project description for RAG
-            project_description = f"{combined_info.get('project_name', '')} - {combined_info.get('goal', '')}"
+            project_description = f"{combined_info.get('project_name', '')} - {combined_info.get('goal', '')} - {combined_info.get('additional_context', '')}"
             
-            # Get additional context from RAG pipeline
-            rag_context = rag_pipeline(project_description)
+            # 주어진 쿼리와 관련된 문서를 검색
+            rag_context = double_retrieve(project_description+"""목적', '목표', '배경', '필요성', 'why', 'purpose', 'objective',
+                    '기대효과', '기대', '성과', '효과', 'outcome', 'impact', 'benefit',
+                    '문제', '현황', '상황', 'problem', 'status', 'situation'
+                    '목적', '목표', '배경', '필요성', 'why', 'purpose', 'objective',
+                    '기대효과', '기대', '성과', '효과', 'outcome', 'impact', 'benefit',
+                    '문제', '현황', '상황', 'problem', 'status', 'situation'" "범위 정의""")
             
             # Match categories
-            categories = self.category_matcher.match_task_to_categories({"description": project_description})
+            set_of_categories = self.category_matcher.match_task_to_categories({"description": project_description})
+            categories = [category['category_id'] for category in set_of_categories][:3]
             
             # Combine all context
             full_context = combined_info.get("additional_context", [])
             if rag_context:
                 full_context.append(f"관련 사례 및 참고 정보: {rag_context}")
-            
+            # 기능별로 html을 반환하는 AI를 사용하고 그 결과를 합함.
             # Generate purpose analysis with RAG context
-            purpose_result = self.purpose_chain.invoke({
-                "request": combined_info.get("goal", ""),
-                "context": full_context
-            })
-            
-            # Generate scope definition with RAG context
-            scope_result = self.scope_chain.invoke({
-                "request": combined_info.get("goal", ""),
-                "context": full_context,
-                "purpose_analysis": purpose_result
-            })
-            
-            # Generate case study with RAG context
-            case_result = self.case_chain.invoke({
-                "request": combined_info.get("goal", ""),
-                "context": full_context,
-                "purpose_analysis": purpose_result,
-                "scope_definition": scope_result
-            })
-            
-            # Generate evaluation criteria with RAG context
-            eval_result = self.eval_chain.invoke({
-                "request": combined_info.get("goal", ""),
-                "context": full_context,
-                "purpose_analysis": purpose_result,
-                "scope_definition": scope_result,
-                "case_study": case_result
-            })
-            
+            purpose_result = rag_pipeline(full_context, "목적 및 배경을 소개해주세요")
+            full_context = combined_info.get("additional_context", [])
+            scope_result = rag_pipeline(context=(full_context+ [doc.page_content for doc in double_retrieve(project_description+
+                    """ '범위', '규모', '기간', '대상', 'scope', 'scale', 'timeline',
+                    '예산', '비용', '금액', '재정', 'budget', 'cost', 'financial',
+                    '인력', '자원', '리소스', 'resource', 'manpower', 'staff'""")]), query="금액, 예산, 인력, 규모, 기간, 대상, 범위 등을 소개해 주세요요")
+            full_context = combined_info.get("additional_context", [])
+            case_result = rag_pipeline(full_context+ [doc.page_content for doc in double_retrieve(project_description+
+                    """'사례', '예시', '참고', '벤치마크', 'case', 'example', 'reference',
+                    '표준', '기준', '업계', '시장', 'standard', 'industry', 'market',
+                    '방법론', '기술', '접근', 'methodology', 'technology', 'approach'""")], query='사례, 예시, 참고, 벤치마크, 기준, 업계, 시장, 기술, 접근 등을 소개해 주세요')
+            full_context = combined_info.get("additional_context", [])
+            eval_result = rag_pipeline(full_context+ [doc.page_content for doc in double_retrieve(project_description+
+                    """'평가', '기준', '지표', '점수', 'evaluation', 'criteria', 'metrics',
+                    '정성', '질적', '주관', 'qualitative', 'subjective', 'quality',
+                    '산출물', '결과물', '성과물', 'deliverable', 'output', 'result'""")], query='평가 기준, 배점, 결과물의 형식, 점수 지표 등을 정해주세요')
             # Generate tasks with RAG context
-            task_result = self.task_chain.invoke({
-                "request": combined_info.get("goal", ""),
-                "context": full_context,
-                "purpose_analysis": purpose_result,
-                "scope_definition": scope_result,
-                "case_study": case_result,
-                "evaluation_criteria": eval_result
-            })
+            full_context = combined_info.get("additional_context", [])
             
-            # Generate outline using outline chain
-            outline_result = self.outline_chain.invoke(task_result, categories)
             
+            task_result = rag_pipeline(full_context+ [doc.page_content for doc in double_retrieve(project_description+" 요구사항, 요청사항을 작성해주세요")], query=project_description)
+            # Generate outline using outline chain            
             # Compose final result
-            final_result = self.result_composer.compose(
-                outline_result=outline_result,
-                rag_response=rag_context,
-                project_info=combined_info,
-                categories=categories
-            )
+            final_result = purpose_result+'\n\n'+scope_result+'\n\n'+case_result+'\n\n'+eval_result+'\n\n'+task_result
             
             return {
                 "status": "success",
@@ -324,3 +313,5 @@ class AgentInterface:
         finally:
             # End performance monitoring
             self.performance_monitor.end_operation("outline_generation") 
+
+print("agent_interface.py 실행완료")

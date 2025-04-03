@@ -43,38 +43,10 @@ def display_chat_message(message, is_user=False):
     with st.chat_message("user" if is_user else "assistant"):
         st.markdown(message)
 
-def display_outline(result: dict):
+def display_outline(result: str):
     """Display the generated outline in a structured format."""
-    if result["status"] == "success":
-        st.success("제안서 개요가 성공적으로 생성되었습니다!")
-        
-        # Display category and language
-        st.subheader("카테고리 및 언어")
-        st.write(f"카테고리: {result['outline']['category']}")
-        st.write(f"언어: {result['outline']['language']}")
-        
-        # Display sections
-        st.subheader("제안서 구성")
-        for section in result["outline"]["sections"]:
-            st.markdown(f"### {section['title']}")
-            st.write(f"관련성 점수: {section['relevance']:.2f}")
-            
-            # Display subsections
-            for subsection in section["subsections"]:
-                st.markdown(f"- {subsection}")
-            
-            # Display relevant tasks
-            if section["relevant_tasks"]:
-                st.markdown("**관련 작업:**")
-                for task in section["relevant_tasks"]:
-                    st.markdown(f"- {task.get('description', '')}")
-        
-        # Display metadata
-        if result["outline"]["metadata"]:
-            st.subheader("메타데이터")
-            st.write(result["outline"]["metadata"])
-    else:
-        st.error(result["message"])
+    html_template = result.replace("```html", "").replace("```", "")
+    st.html(html_template)
 
 def update_project_info(response: str):
     """Update project info based on the response content."""
@@ -85,7 +57,8 @@ def generate_outline_directly():
     """Generate outline directly without conversation."""
     with st.spinner("제안서 개요를 생성하는 중..."):
         result = st.session_state.agent.generate_outline(st.session_state.project_info)
-        display_outline(result)
+        print(result, "result!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1")
+        display_outline(result["outline"])
         st.session_state.outline_generated = True
 
 def main():
@@ -108,57 +81,59 @@ def main():
     """)
 
     # Add direct outline generation button
-    if not st.session_state.outline_generated:
-        col1, col2 = st.columns([3, 1])
-        with col2:
-            if st.button("RFP 아웃라인 생성하기", type="primary"):
-                generate_outline_directly()
-
-    # Display chat history
-    for message in st.session_state.messages:
-        display_chat_message(message["content"], message["is_user"])
-
-    # Start conversation if not started
-    if not st.session_state.conversation_started:
-        initial_message = "안녕하세요! 저는 제안서 작성을 도와드리는 AI 어시스턴트입니다. 어떤 프로젝트를 준비하고 계신가요?"
-        display_chat_message(initial_message)
-        st.session_state.messages.append({"content": initial_message, "is_user": False})
-        st.session_state.conversation_started = True
-
-    # Chat input
-    if prompt := st.chat_input("여기에 메시지를 입력하세요..."):
-        # Display user message
-        display_chat_message(prompt, is_user=True)
-        st.session_state.messages.append({"content": prompt, "is_user": True})
-
-        # Update project info
-        update_project_info(prompt)
-
-        # Check if we should continue gathering information
-        if st.session_state.agent.should_continue_conversation(st.session_state.project_info):
-            # Generate next question
-            next_question = st.session_state.agent.generate_next_question(
-                st.session_state.project_info,
-                st.session_state.messages
-            )
+    col1, col2 = st.columns([1, 1])
+    with col2:
+        if st.button("RFP 아웃라인 생성하기", type="primary"):
             
-            # Display agent's response
-            display_chat_message(next_question)
-            st.session_state.messages.append({"content": next_question, "is_user": False})
-        else:
-            # We have all required information, generate outline
-            with st.spinner("제안서 개요를 생성하는 중..."):
-                result = st.session_state.agent.generate_outline(st.session_state.project_info)
-                display_outline(result)
-                st.session_state.outline_generated = True
-            
-            # Ask if user wants to continue
-            continue_msg = "제안서 개요가 생성되었습니다. 더 자세한 정보를 추가하시겠어요?"
-            display_chat_message(continue_msg)
-            st.session_state.messages.append({"content": continue_msg, "is_user": False})
+            generate_outline_directly()
+
+    with col1:
+        # Display chat history
+        for message in st.session_state.messages:
+            display_chat_message(message["content"], message["is_user"])
+
+        # Start conversation if not started
+        if not st.session_state.conversation_started:
+            initial_message = "안녕하세요! 저는 제안서 작성을 도와드리는 AI 어시스턴트입니다. 어떤 프로젝트를 준비하고 계신가요?"
+            display_chat_message(initial_message)
+            st.session_state.messages.append({"content": initial_message, "is_user": False})
+            st.session_state.conversation_started = True
+
+        # Chat input
+        if prompt := st.chat_input("여기에 메시지를 입력하세요..."):
+            # Display user message
+            display_chat_message(prompt, is_user=True)
+            st.session_state.messages.append({"content": prompt, "is_user": True})
+
+            # Update project info
+            update_project_info(prompt)
+
+            # Check if we should continue gathering information
+            if st.session_state.agent.should_continue_conversation(st.session_state.project_info):
+                # Generate next question
+                next_question = st.session_state.agent.generate_next_question(
+                    st.session_state.project_info,
+                    st.session_state.messages
+                )
+                
+                # Display agent's response
+                display_chat_message(next_question)
+                st.session_state.messages.append({"content": next_question, "is_user": False})
+            else:
+                # We have all required information, generate outline
+                with st.spinner("제안서 개요를 생성하는 중..."):
+                    print(st.session_state.project_info)
+                    result = st.session_state.agent.generate_outline(st.session_state.project_info)
+                    display_outline(result)
+                    st.session_state.outline_generated = True
+                
+                # Ask if user wants to continue
+                continue_msg = "제안서 개요가 생성되었습니다. 더 자세한 정보를 추가하시겠어요?"
+                display_chat_message(continue_msg)
+                st.session_state.messages.append({"content": continue_msg, "is_user": False})
 
         # Rerun to update the UI
-        st.rerun()
+            st.rerun()
 
 if __name__ == "__main__":
     main() 

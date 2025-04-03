@@ -6,7 +6,6 @@
 from typing import List, Dict
 import logging
 from datetime import datetime
-from utils.exceptions import CompositionError
 
 logger = logging.getLogger(__name__)
 
@@ -65,4 +64,4 @@ class ResultComposer:
             
         except Exception as e:
             logger.error(f"결과 작성 중 오류 발생: {str(e)}")
-            raise CompositionError(f"결과 작성 실패: {str(e)}") 
+            raise Exception(f"결과 작성 실패: {str(e)}") 

@@ -120,7 +120,12 @@ class CategoryMatcher:
             return 0.0
 
     def match_task_to_categories(self, task: Dict) -> List[Dict]:
-        """작업을 관련 카테고리와 매칭하는 메인 메서드"""
+        """작업을 관련 카테고리와 매칭하는 메인 메서드 
+        Args:
+            task (Dict): 작업 정보 project_info
+        Returns:
+            List[Dict]: 정렬된된매칭된 카테고리 정보
+        """
         try:
             matches = []
             task_text = task.get('description', '')

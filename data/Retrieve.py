@@ -8,19 +8,10 @@ env_path = config_dir / ".env"
 if env_path.exists():
     from dotenv import load_dotenv
     load_dotenv(env_path)
-    print(f"Loaded environment variables from {env_path}")
 else:
     print(f"Warning: .env file not found at {env_path}")
-
-print(f"Python path: {sys.path}")
-print(f"Python version: {sys.version}")
-
 # Check for OpenAI API key
 if not os.getenv("OPENAI_API_KEY"):
-    print("Warning: OPENAI_API_KEY environment variable is not set")
-    print("Please set your OpenAI API key using one of these methods:")
-    print("1. Set environment variable: export OPENAI_API_KEY='your-api-key'")
-    print("2. Create a .env file in the config directory with: OPENAI_API_KEY=your-api-key")
     raise ValueError("OPENAI_API_KEY environment variable is not set")
 
 try:
@@ -47,42 +38,33 @@ except ImportError as e:
 DATA_DIR = Path(__file__).parent
 print(f"Data directory: {DATA_DIR}")
 
-try:
-    print("Initializing OpenAI embeddings...")
-    embeddings = OpenAIEmbeddings()
-    print("Successfully initialized embeddings")
-    
-    print("Loading case database...")
-    case_db_path = str(DATA_DIR / "vector_db_case")
-    print(f"Case DB path: {case_db_path}")
-    loaded_case_db = FAISS.load_local(
-        folder_path=case_db_path,
-        embeddings=embeddings,
-        allow_dangerous_deserialization=True,
-        index_name="case_vector"
-    )
-    print("Successfully loaded case database")
 
-    print("Loading criteria database...")
-    criteria_db_path = str(DATA_DIR / "vector_db_criteria")
-    print(f"Criteria DB path: {criteria_db_path}")
-    loaded_criteria_db = FAISS.load_local(
-        folder_path=criteria_db_path,
-        embeddings=embeddings,
-        allow_dangerous_deserialization=True,
-        index_name="criteria_vector"
-    )
-    print("Successfully loaded criteria database")
+embeddings = OpenAIEmbeddings()
+print("Successfully initialized embeddings")
 
-    _case_retriever = loaded_case_db.as_retriever(k=3)
-    _criteria_retriever = loaded_criteria_db.as_retriever(k=10)
-    print("Successfully initialized retrievers")
-except Exception as e:
-    print(f"Error initializing vector stores: {e}")
-    print(f"Current working directory: {os.getcwd()}")
-    print(f"Data directory path: {DATA_DIR}")
-    print(f"Directory contents: {os.listdir(DATA_DIR)}")
-    raise
+print("Loading case database...")
+case_db_path = str(DATA_DIR / "vector_db_case")
+print(f"Case DB path: {case_db_path}")
+loaded_case_db = FAISS.load_local(
+    folder_path=case_db_path,
+    embeddings=embeddings,
+    allow_dangerous_deserialization=True,
+    index_name="case_vector"
+)
+print("Successfully loaded case database")
+
+print("Loading criteria database...")
+criteria_db_path = str(DATA_DIR / "vector_db_criteria")
+print(f"Criteria DB path: {criteria_db_path}")
+loaded_criteria_db = FAISS.load_local(
+    folder_path=criteria_db_path,
+    embeddings=embeddings,
+    allow_dangerous_deserialization=True,
+    index_name="criteria_vector"
+)
+
+_case_retriever = loaded_case_db.as_retriever(k=5)
+_criteria_retriever = loaded_criteria_db.as_retriever(k=10)
 
 #각각의 데이터베이스를 기반으로 한 retriever 반환
 #QA체인 등을 만들때 retriever 인자로 사용
@@ -96,3 +78,4 @@ def get_criteria_retriever():
 #반환값은 Document 형식
 def double_retrieve(query):
     return _case_retriever.invoke(query)+_criteria_retriever.invoke(query)
+

@@ -55,7 +55,6 @@ class OutlineChain:
                 "task_result": task_result,
                 "categories": categories
             })
-            
             # If it's a function call response, extract the arguments
             if hasattr(response, 'function_call') and response.function_call:
                 import json
