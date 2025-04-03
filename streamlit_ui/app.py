@@ -64,7 +64,7 @@ def generate_outline_directly():
 def main():
     # Set page config
     st.set_page_config(
-        page_title="대화형 RFP Outline 생성기",
+        page_title="대화형 RFP Outline 생성 에이전트",
         page_icon="📝",
         layout="wide"
     )
@@ -73,7 +73,7 @@ def main():
     initialize_session_state()
 
     # Add title and description
-    st.title("💬 RFP 아웃라인 생성기")
+    st.title("🛫 RFP Pilot")
     st.markdown("""
     이 애플리케이션은 대화를 통해 프로젝트에 대한 정보를 수집하고, 
     맞춤형 제안서 개요를 생성해드립니다. 자연스러운 대화를 통해 

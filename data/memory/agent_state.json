@@ -4,8 +4,1088 @@
     {
       "type": "conversation_analysis",
       "state": {
-        "current_topic": "",
-        "last_question": "",
+        "question": "프로젝트의 세부 요구사항, 제약사항, 예산, 타임라인, 이해관계자에 대해 좀 더 자세히 알려주실 수 있나요?",
+        "current_topic": "프로젝트의 세부 요구사항 및 제약사항",
+        "last_question": "프로젝트의 세부 요구사항, 제약사항, 예산, 타임라인, 이해관계자에 대해 좀 더 자세히 알려주실 수 있나요?",
         "follow_up_count": 1,
         "extracted_info": {},
-        "missing_info": 
+        "missing_info": [
+          "프로젝트의 세부 요구사항",
+          "프로젝트의 제약사항",
+          "프로젝트의 예산",
+          "프로젝트의 타임라인",
+          "프로젝트의 이해관계자"
+        ],
+        "conversation_context": "사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고 싶어한다."
+      },
+      "result_data": {
+        "content": "",
+        "additional_kwargs": {
+          "function_call": {
+            "arguments": "{\n\"core_purpose\": \"전자금융 사고 대응 모의 훈련 시스템의 구축\",\n\"problem_statement\": \"현재 전자금융 사고 대응에 대한 효과적인 모의 훈련 시스템이 없음\",\n\"final_goal\": \"전자금융 사고 대응을 위한 효과적인 모의 훈련 시스템 구축\",\n\"key_objectives\": [\"시스템 요구사항 정의\", \"시스템 설계 및 구축\", \"시스템 테스트 및 검증\", \"사용자 훈련 및 시스템 배포\"],\n\"next_topic\": \"프로젝트의 세부 요구사항 및 제약사항\",\n\"conversation_context\": \"사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고 싶어한다.\",\n\"missing_info\": [\"프로젝트의 세부 요구사항\", \"프로젝트의 제약사항\", \"프로젝트의 예산\", \"프로젝트의 타임라인\", \"프로젝트의 이해관계자\"],\n\"question\": \"프로젝트의 세부 요구사항, 제약사항, 예산, 타임라인, 이해관계자에 대해 좀 더 자세히 알려주실 수 있나요?\"\n}",
+            "name": "analyze_purpose"
+          },
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 416,
+            "prompt_tokens": 621,
+            "total_tokens": 1037,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          },
+          "model_name": "gpt-4-0613",
+          "system_fingerprint": null,
+          "id": "chatcmpl-BIIVGBEpPZTiIiBYhvAa5DZD7qEpz",
+          "finish_reason": "function_call",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run-e588bf96-ec57-4b85-9373-8d22cc831672-0",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 621,
+          "output_tokens": 416,
+          "total_tokens": 1037,
+          "input_token_details": {
+            "audio": 0,
+            "cache_read": 0
+          },
+          "output_token_details": {
+            "audio": 0,
+            "reasoning": 0
+          }
+        }
+      },
+      "timestamp": 1743700751.131391
+    },
+    {
+      "type": "question_generation",
+      "state": {
+        "question": "프로젝트의 세부 요구사항, 제약사항, 예산, 타임라인, 이해관계자에 대해 좀 더 자세히 알려주실 수 있나요?",
+        "current_topic": "프로젝트의 세부 요구사항 및 제약사항",
+        "last_question": "프로젝트의 세부 요구사항, 제약사항, 예산, 타임라인, 이해관계자에 대해 좀 더 자세히 알려주실 수 있나요?",
+        "follow_up_count": 1,
+        "extracted_info": {},
+        "missing_info": [
+          "프로젝트의 세부 요구사항",
+          "프로젝트의 제약사항",
+          "프로젝트의 예산",
+          "프로젝트의 타임라인",
+          "프로젝트의 이해관계자"
+        ],
+        "conversation_context": "사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고 싶어한다."
+      },
+      "result_data": {
+        "content": "",
+        "additional_kwargs": {
+          "function_call": {
+            "arguments": "{\n\"core_purpose\": \"자연스러운 다음 질문을 생성하는 것\",\n\"problem_statement\": \"프로젝트의 세부 요구사항, 제약사항, 예산, 타임라인, 이해관계자 등에 대한 정보가 누락되어 있음\",\n\"final_goal\": \"전자금융 사고 대응 모의 훈련 시스템 구축에 필요한 모든 정보를 얻는 것\",\n\"key_objectives\": [\"이전 대화 맥락을 고려한 자연스러운 질문 생성\", \"누락된 중요 정보를 우선적으로 요청\", \"사용자의 이전 답변을 참조하여 구체적인 후속 질문 생성\", \"대화가 자연스럽게 흐르도록 구성\"],\n\"next_topic\": \"프로젝트의 세부 요구사항\",\n\"conversation_context\": \"사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고 싶어한다.\",\n\"missing_info\": [\"프로젝트의 세부 요구사항\", \"프로젝트의 제약사항\", \"프로젝트의 예산\", \"프로젝트의 타임라인\", \"프로젝트의 이해관계자\"],\n\"question\": \"전자금융 사고 대응 모의 훈련 시스템을 구축하기 위해 필요한 세부 요구사항은 무엇인가요?\"\n}",
+            "name": "analyze_purpose"
+          },
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 436,
+            "prompt_tokens": 762,
+            "total_tokens": 1198,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          },
+          "model_name": "gpt-4-0613",
+          "system_fingerprint": null,
+          "id": "chatcmpl-BIIVbmiYHb7Ykta93xXyuYmhIHEyK",
+          "finish_reason": "function_call",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run-0013a730-381e-4e7d-8788-1f2754966dd7-0",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 762,
+          "output_tokens": 436,
+          "total_tokens": 1198,
+          "input_token_details": {
+            "audio": 0,
+            "cache_read": 0
+          },
+          "output_token_details": {
+            "audio": 0,
+            "reasoning": 0
+          }
+        }
+      },
+      "timestamp": 1743700770.00858
+    },
+    {
+      "type": "conversation_analysis",
+      "state": {
+        "question": "프로젝트의 제약사항과 이해관계자에 대해 좀 더 자세히 알려주실 수 있나요?",
+        "current_topic": "제약사항 및 이해관계자에 대한 정보",
+        "last_question": "프로젝트의 제약사항과 이해관계자에 대해 좀 더 자세히 알려주실 수 있나요?",
+        "follow_up_count": 1,
+        "extracted_info": {},
+        "missing_info": [
+          "제약사항",
+          "이해관계자"
+        ],
+        "conversation_context": "사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 약 5개월의 시간과 1억 원의 예산을 가지고 있습니다. 시스템은 실시간 시뮬레이션, 사용자 인증, 보안 점검 기능을 포함해야 합니다."
+      },
+      "result_data": {
+        "content": "",
+        "additional_kwargs": {
+          "function_call": {
+            "arguments": "{\n\"core_purpose\": \"전자금융 사고 대응 모의 훈련 시스템 구축\",\n\"problem_statement\": \"전자금융 사고 대응을 위한 효과적인 모의 훈련 시스템이 없음\",\n\"final_goal\": \"실시간 시뮬레이션, 사용자 인증, 보안 점검 기능을 포함한 전자금융 사고 대응 모의 훈련 시스템 구축\",\n\"key_objectives\": [\"실시간 시뮬레이션 구현\", \"사용자 인증 기능 구현\", \"보안 점검 기능 구현\"],\n\"next_topic\": \"제약사항 및 이해관계자에 대한 정보\",\n\"conversation_context\": \"사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 약 5개월의 시간과 1억 원의 예산을 가지고 있습니다. 시스템은 실시간 시뮬레이션, 사용자 인증, 보안 점검 기능을 포함해야 합니다.\",\n\"missing_info\": [\"제약사항\", \"이해관계자\"],\n\"question\": \"프로젝트의 제약사항과 이해관계자에 대해 좀 더 자세히 알려주실 수 있나요?\"\n}",
+            "name": "analyze_purpose"
+          },
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 410,
+            "prompt_tokens": 920,
+            "total_tokens": 1330,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          },
+          "model_name": "gpt-4-0613",
+          "system_fingerprint": null,
+          "id": "chatcmpl-BIIXre7syTnRkcEfUTIGGJQboiRfl",
+          "finish_reason": "function_call",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run-e7e8499c-6b81-4c4a-8386-104935b25b34-0",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 920,
+          "output_tokens": 410,
+          "total_tokens": 1330,
+          "input_token_details": {
+            "audio": 0,
+            "cache_read": 0
+          },
+          "output_token_details": {
+            "audio": 0,
+            "reasoning": 0
+          }
+        }
+      },
+      "timestamp": 1743700908.302874
+    },
+    {
+      "type": "question_generation",
+      "state": {
+        "question": "프로젝트의 제약사항과 이해관계자에 대해 좀 더 자세히 알려주실 수 있나요?",
+        "current_topic": "제약사항 및 이해관계자에 대한 정보",
+        "last_question": "프로젝트의 제약사항과 이해관계자에 대해 좀 더 자세히 알려주실 수 있나요?",
+        "follow_up_count": 1,
+        "extracted_info": {},
+        "missing_info": [
+          "제약사항",
+          "이해관계자"
+        ],
+        "conversation_context": "사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 약 5개월의 시간과 1억 원의 예산을 가지고 있습니다. 시스템은 실시간 시뮬레이션, 사용자 인증, 보안 점검 기능을 포함해야 합니다."
+      },
+      "result_data": {
+        "content": "",
+        "additional_kwargs": {
+          "function_call": {
+            "arguments": "{\n\"core_purpose\": \"자연스러운 다음 질문을 생성하는 것\",\n\"problem_statement\": \"제약사항과 이해관계자에 대한 정보가 누락되어 있음\",\n\"final_goal\": \"전자금융 사고 대응 모의 훈련 시스템을 성공적으로 구축하는 것\",\n\"key_objectives\": [\"이전 대화 맥락을 고려한 질문 생성\", \"누락된 중요 정보 요청\", \"사용자의 이전 답변을 참조한 구체적인 후속 질문 생성\", \"대화가 자연스럽게 흐르도록 구성\"],\n\"next_topic\": \"제약사항 및 이해관계자에 대한 정보\",\n\"conversation_context\": \"사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 약 5개월의 시간과 1억 원의 예산을 가지고 있습니다. 시스템은 실시간 시뮬레이션, 사용자 인증, 보안 점검 기능을 포함해야 합니다.\",\n\"missing_info\": [\"제약사항\", \"이해관계자\"],\n\"question\": \"프로젝트를 진행하는 데 있어 어떤 제약사항이 있는지, 그리고 이 프로젝트의 주요 이해관계자는 누구인지 알려주실 수 있나요?\"\n}",
+            "name": "analyze_purpose"
+          },
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 433,
+            "prompt_tokens": 897,
+            "total_tokens": 1330,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          },
+          "model_name": "gpt-4-0613",
+          "system_fingerprint": null,
+          "id": "chatcmpl-BIIY8wTHRB6WkBtqXoeherh26dkzA",
+          "finish_reason": "function_call",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run-4cf6c034-0eab-4918-8e09-9d6c425a72de-0",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 897,
+          "output_tokens": 433,
+          "total_tokens": 1330,
+          "input_token_details": {
+            "audio": 0,
+            "cache_read": 0
+          },
+          "output_token_details": {
+            "audio": 0,
+            "reasoning": 0
+          }
+        }
+      },
+      "timestamp": 1743700926.648306
+    },
+    {
+      "type": "conversation_analysis",
+      "state": {
+        "question": "프로젝트를 진행하는 데 있어서 어떠한 제약사항이 있나요?",
+        "current_topic": "프로젝트의 제약사항",
+        "last_question": "프로젝트를 진행하는 데 있어서 어떠한 제약사항이 있나요?",
+        "follow_up_count": 1,
+        "extracted_info": {},
+        "missing_info": [
+          "제약사항"
+        ],
+        "conversation_context": "사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 5개월의 시간과 1억 원의 예산을 가지고 있습니다. 주요 요구사항으로는 실시간 시뮬레이션, 사용자 인증, 보안 점검 기능이 있습니다. 이해관계자로는 정보보안팀과 IT 인프라팀이 있습니다."
+      },
+      "result_data": {
+        "content": "",
+        "additional_kwargs": {
+          "function_call": {
+            "arguments": "{\n\"core_purpose\": \"전자금융 사고 대응 모의 훈련 시스템 구축\",\n\"problem_statement\": \"전자금융 사고 대응을 위한 효과적인 모의 훈련 시스템이 없음\",\n\"final_goal\": \"실시간 시뮬레이션, 사용자 인증, 보안 점검 기능을 포함하는 전자금융 사고 대응 모의 훈련 시스템 구축\",\n\"key_objectives\": [\"5개월 내에 프로젝트 완료\", \"예산 1억 원 내에서 프로젝트 수행\", \"실시간 시뮬레이션, 사용자 인증, 보안 점검 기능 구현\"],\n\"next_topic\": \"프로젝트의 제약사항\",\n\"conversation_context\": \"사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 5개월의 시간과 1억 원의 예산을 가지고 있습니다. 주요 요구사항으로는 실시간 시뮬레이션, 사용자 인증, 보안 점검 기능이 있습니다. 이해관계자로는 정보보안팀과 IT 인프라팀이 있습니다.\",\n\"missing_info\": [\"제약사항\"],\n\"question\": \"프로젝트를 진행하는 데 있어서 어떠한 제약사항이 있나요?\"\n}",
+            "name": "analyze_purpose"
+          },
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 433,
+            "prompt_tokens": 1052,
+            "total_tokens": 1485,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          },
+          "model_name": "gpt-4-0613",
+          "system_fingerprint": null,
+          "id": "chatcmpl-BIIYsjnYKTLK8zxHkDmAeXSUXrWYX",
+          "finish_reason": "function_call",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run-b58e2bc8-ce00-4a0d-a5d1-aa7a9f808d06-0",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 1052,
+          "output_tokens": 433,
+          "total_tokens": 1485,
+          "input_token_details": {
+            "audio": 0,
+            "cache_read": 0
+          },
+          "output_token_details": {
+            "audio": 0,
+            "reasoning": 0
+          }
+        }
+      },
+      "timestamp": 1743700971.877495
+    },
+    {
+      "type": "question_generation",
+      "state": {
+        "question": "프로젝트를 진행하는 데 있어서 어떠한 제약사항이 있나요?",
+        "current_topic": "프로젝트의 제약사항",
+        "last_question": "프로젝트를 진행하는 데 있어서 어떠한 제약사항이 있나요?",
+        "follow_up_count": 1,
+        "extracted_info": {},
+        "missing_info": [
+          "제약사항"
+        ],
+        "conversation_context": "사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 5개월의 시간과 1억 원의 예산을 가지고 있습니다. 주요 요구사항으로는 실시간 시뮬레이션, 사용자 인증, 보안 점검 기능이 있습니다. 이해관계자로는 정보보안팀과 IT 인프라팀이 있습니다."
+      },
+      "result_data": {
+        "content": "",
+        "additional_kwargs": {
+          "function_call": {
+            "arguments": "{\n\"core_purpose\": \"전자금융 사고 대응 모의 훈련 시스템을 구축하는 것\",\n\"problem_statement\": \"사용자는 제한된 시간과 예산 내에서 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 함\",\n\"final_goal\": \"5개월 내에 1억 원의 예산으로 전자금융 사고 대응 모의 훈련 시스템을 성공적으로 구축하는 것\",\n\"key_objectives\": [\"실시간 시뮬레이션 기능 구현\", \"사용자 인증 기능 구현\", \"보안 점검 기능 구현\"],\n\"next_topic\": \"프로젝트의 제약사항\",\n\"conversation_context\": \"사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 5개월의 시간과 1억 원의 예산을 가지고 있습니다. 주요 요구사항으로는 실시간 시뮬레이션, 사용자 인증, 보안 점검 기능이 있습니다. 이해관계자로는 정보보안팀과 IT 인프라팀이 있습니다.\",\n\"missing_info\": [\"제약사항\"],\n\"question\": \"프로젝트를 진행하는 데 있어 어떤 제약사항이 있을까요?\"\n}",
+            "name": "analyze_purpose"
+          },
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 414,
+            "prompt_tokens": 885,
+            "total_tokens": 1299,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          },
+          "model_name": "gpt-4-0613",
+          "system_fingerprint": null,
+          "id": "chatcmpl-BIIZACrUsjBsgr0VLqFiutGkAPo7b",
+          "finish_reason": "function_call",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run-9a7c15d4-37b3-447e-b0b4-9785b7c9bd0e-0",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 885,
+          "output_tokens": 414,
+          "total_tokens": 1299,
+          "input_token_details": {
+            "audio": 0,
+            "cache_read": 0
+          },
+          "output_token_details": {
+            "audio": 0,
+            "reasoning": 0
+          }
+        }
+      },
+      "timestamp": 1743700990.97799
+    },
+    {
+      "type": "conversation_analysis",
+      "state": {
+        "question": "프로젝트의 세부 계획과 실행 전략에 대해 좀 더 자세히 알려주실 수 있나요?",
+        "current_topic": "프로젝트의 세부 계획 및 실행 전략",
+        "last_question": "프로젝트의 세부 계획과 실행 전략에 대해 좀 더 자세히 알려주실 수 있나요?",
+        "follow_up_count": 1,
+        "extracted_info": {},
+        "missing_info": [
+          "프로젝트의 세부 계획",
+          "실행 전략"
+        ],
+        "conversation_context": "사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 5개월의 시간과 1억 원의 예산을 가지고 있습니다. 주요 요구사항은 실시간 시뮬레이션, 사용자 인증, 보안 점검 기능이며, 이해관계자는 정보보안팀과 IT 인프라팀입니다. 제약사항으로는 실제 사고 수준의 보안 환경 구현, 민감한 정보 보호, 기관별 맞춤형 설계, 그리고 시스템 안정성 확보가 있습니다."
+      },
+      "result_data": {
+        "content": "",
+        "additional_kwargs": {
+          "function_call": {
+            "arguments": "{\n\"core_purpose\": \"전자금융 사고 대응 모의 훈련 시스템을 구축하는 것\",\n\"problem_statement\": \"전자금융 사고 대응을 위한 효과적인 모의 훈련 시스템이 없음\",\n\"final_goal\": \"실시간 시뮬레이션, 사용자 인증, 보안 점검 기능을 포함한 전자금융 사고 대응 모의 훈련 시스템 구축\",\n\"key_objectives\": [\"5개월 내에 프로젝트 완료\", \"1억 원의 예산 내에서 프로젝트 수행\", \"실제 사고 수준의 보안 환경 구현\", \"민감한 정보 보호\", \"기관별 맞춤형 설계\", \"시스템 안정성 확보\"],\n\"next_topic\": \"프로젝트의 세부 계획 및 실행 전략\",\n\"conversation_context\": \"사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 5개월의 시간과 1억 원의 예산을 가지고 있습니다. 주요 요구사항은 실시간 시뮬레이션, 사용자 인증, 보안 점검 기능이며, 이해관계자는 정보보안팀과 IT 인프라팀입니다. 제약사항으로는 실제 사고 수준의 보안 환경 구현, 민감한 정보 보호, 기관별 맞춤형 설계, 그리고 시스템 안정성 확보가 있습니다.\",\n\"missing_info\": [\"프로젝트의 세부 계획\", \"실행 전략\"],\n\"question\": \"프로젝트의 세부 계획과 실행 전략에 대해 좀 더 자세히 알려주실 수 있나요?\"\n}",
+            "name": "analyze_purpose"
+          },
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 560,
+            "prompt_tokens": 1304,
+            "total_tokens": 1864,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          },
+          "model_name": "gpt-4-0613",
+          "system_fingerprint": null,
+          "id": "chatcmpl-BIIa3IeyH7Axcjl8R899cFSYeGQrY",
+          "finish_reason": "function_call",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run-f99c2457-ccc1-4a9e-9223-7ed1cd53bbcf-0",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 1304,
+          "output_tokens": 560,
+          "total_tokens": 1864,
+          "input_token_details": {
+            "audio": 0,
+            "cache_read": 0
+          },
+          "output_token_details": {
+            "audio": 0,
+            "reasoning": 0
+          }
+        }
+      },
+      "timestamp": 1743701051.00165
+    },
+    {
+      "type": "question_generation",
+      "state": {
+        "question": "프로젝트의 세부 계획과 실행 전략에 대해 좀 더 자세히 알려주실 수 있나요?",
+        "current_topic": "프로젝트의 세부 계획 및 실행 전략",
+        "last_question": "프로젝트의 세부 계획과 실행 전략에 대해 좀 더 자세히 알려주실 수 있나요?",
+        "follow_up_count": 1,
+        "extracted_info": {},
+        "missing_info": [
+          "프로젝트의 세부 계획",
+          "실행 전략"
+        ],
+        "conversation_context": "사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 5개월의 시간과 1억 원의 예산을 가지고 있습니다. 주요 요구사항은 실시간 시뮬레이션, 사용자 인증, 보안 점검 기능이며, 이해관계자는 정보보안팀과 IT 인프라팀입니다. 제약사항으로는 실제 사고 수준의 보안 환경 구현, 민감한 정보 보호, 기관별 맞춤형 설계, 그리고 시스템 안정성 확보가 있습니다."
+      },
+      "result_data": {
+        "content": "",
+        "additional_kwargs": {
+          "function_call": {
+            "arguments": "{\n\"core_purpose\": \"전자금융 사고 대응 모의 훈련 시스템을 구축하는 것\",\n\"problem_statement\": \"사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하지만, 프로젝트의 세부 계획과 실행 전략에 대한 정보가 누락되어 있습니다.\",\n\"final_goal\": \"5개월의 시간과 1억 원의 예산 내에서 실시간 시뮬레이션, 사용자 인증, 보안 점검 기능을 갖춘 전자금융 사고 대응 모의 훈련 시스템을 구축하는 것\",\n\"key_objectives\": [\"실시간 시뮬레이션 구현\", \"사용자 인증 기능 구현\", \"보안 점검 기능 구현\", \"실제 사고 수준의 보안 환경 구현\", \"민감한 정보 보호\", \"기관별 맞춤형 설계\", \"시스템 안정성 확보\"],\n\"next_topic\": \"프로젝트의 세부 계획 및 실행 전략\",\n\"conversation_context\": \"사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 5개월의 시간과 1억 원의 예산을 가지고 있습니다. 주요 요구사항은 실시간 시뮬레이션, 사용자 인증, 보안 점검 기능이며, 이해관계자는 정보보안팀과 IT 인프라팀입니다. 제약사항으로는 실제 사고 수준의 보안 환경 구현, 민감한 정보 보호, 기관별 맞춤형 설계, 그리고 시스템 안정성 확보가 있습니다.\",\n\"missing_info\": [\"프로젝트의 세부 계획\", \"실행 전략\"],\n\"question\": \"프로젝트의 세부 계획과 실행 전략에 대해 좀 더 자세히 알려주실 수 있나요?\"\n}",
+            "name": "analyze_purpose"
+          },
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 627,
+            "prompt_tokens": 1089,
+            "total_tokens": 1716,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          },
+          "model_name": "gpt-4-0613",
+          "system_fingerprint": null,
+          "id": "chatcmpl-BIIaRyGFgwnBA7xWBc9CWgZ6mj8Id",
+          "finish_reason": "function_call",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run-0c3c36c3-54e7-4f4d-b0be-6db007008710-0",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 1089,
+          "output_tokens": 627,
+          "total_tokens": 1716,
+          "input_token_details": {
+            "audio": 0,
+            "cache_read": 0
+          },
+          "output_token_details": {
+            "audio": 0,
+            "reasoning": 0
+          }
+        }
+      },
+      "timestamp": 1743701079.383649
+    },
+    {
+      "type": "conversation_analysis",
+      "state": {
+        "question": "프로젝트의 구체적인 요구사항, 제약사항, 예산, 타임라인, 그리고 이해관계자에 대해 자세히 알려주실 수 있나요?",
+        "current_topic": "프로젝트의 구체적인 요구사항과 제약사항",
+        "last_question": "프로젝트의 구체적인 요구사항, 제약사항, 예산, 타임라인, 그리고 이해관계자에 대해 자세히 알려주실 수 있나요?",
+        "follow_up_count": 1,
+        "extracted_info": {},
+        "missing_info": [
+          "프로젝트의 구체적인 요구사항",
+          "프로젝트의 제약사항",
+          "프로젝트의 예산",
+          "프로젝트의 타임라인",
+          "프로젝트의 이해관계자"
+        ],
+        "conversation_context": "사용자는 전자금융 사고 대응 모의 훈련 시스텠을 구축하고 싶어한다."
+      },
+      "result_data": {
+        "content": "",
+        "additional_kwargs": {
+          "function_call": {
+            "arguments": "{\n\"core_purpose\": \"전자금융 사고 대응 모의 훈련 시스템 구축\",\n\"problem_statement\": \"전자금융 사고 대응에 대한 효과적인 훈련 시스템이 없음\",\n\"final_goal\": \"전자금융 사고 대응 모의 훈련 시스템을 성공적으로 구축하고 운영\",\n\"key_objectives\": [\"시스템 요구사항 정의\", \"시스템 설계 및 구축\", \"시스템 테스트 및 검증\", \"시스템 배포 및 유지보수\"],\n\"next_topic\": \"프로젝트의 구체적인 요구사항과 제약사항\",\n\"conversation_context\": \"사용자는 전자금융 사고 대응 모의 훈련 시스텠을 구축하고 싶어한다.\",\n\"missing_info\": [\"프로젝트의 구체적인 요구사항\", \"프로젝트의 제약사항\", \"프로젝트의 예산\", \"프로젝트의 타임라인\", \"프로젝트의 이해관계자\"],\n\"question\": \"프로젝트의 구체적인 요구사항, 제약사항, 예산, 타임라인, 그리고 이해관계자에 대해 자세히 알려주실 수 있나요?\"\n}",
+            "name": "analyze_purpose"
+          },
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 411,
+            "prompt_tokens": 621,
+            "total_tokens": 1032,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          },
+          "model_name": "gpt-4-0613",
+          "system_fingerprint": null,
+          "id": "chatcmpl-BIIfu7TtDICVeTMKDlR9ItD26XG8m",
+          "finish_reason": "function_call",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run-e7f523d0-5e15-4eaf-87f3-53c385f8fb77-0",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 621,
+          "output_tokens": 411,
+          "total_tokens": 1032,
+          "input_token_details": {
+            "audio": 0,
+            "cache_read": 0
+          },
+          "output_token_details": {
+            "audio": 0,
+            "reasoning": 0
+          }
+        }
+      },
+      "timestamp": 1743701407.162699
+    },
+    {
+      "type": "question_generation",
+      "state": {
+        "question": "프로젝트의 구체적인 요구사항, 제약사항, 예산, 타임라인, 그리고 이해관계자에 대해 자세히 알려주실 수 있나요?",
+        "current_topic": "프로젝트의 구체적인 요구사항과 제약사항",
+        "last_question": "프로젝트의 구체적인 요구사항, 제약사항, 예산, 타임라인, 그리고 이해관계자에 대해 자세히 알려주실 수 있나요?",
+        "follow_up_count": 1,
+        "extracted_info": {},
+        "missing_info": [
+          "프로젝트의 구체적인 요구사항",
+          "프로젝트의 제약사항",
+          "프로젝트의 예산",
+          "프로젝트의 타임라인",
+          "프로젝트의 이해관계자"
+        ],
+        "conversation_context": "사용자는 전자금융 사고 대응 모의 훈련 시스텠을 구축하고 싶어한다."
+      },
+      "result_data": {
+        "content": "",
+        "additional_kwargs": {
+          "function_call": {
+            "arguments": "{\n\"core_purpose\": \"자연스러운 다음 질문을 생성하는 것\",\n\"problem_statement\": \"프로젝트의 구체적인 요구사항, 제약사항, 예산, 타임라인, 이해관계자 등에 대한 정보가 누락되어 있음\",\n\"final_goal\": \"전자금융 사고 대응 모의 훈련 시스템 구축에 필요한 모든 정보를 얻는 것\",\n\"key_objectives\": [\"이전 대화 맥락을 고려한 자연스러운 질문 생성\", \"누락된 중요 정보를 우선적으로 요청\", \"사용자의 이전 답변을 참조하여 구체적인 후속 질문 생성\", \"대화가 자연스럽게 흐르도록 구성\"],\n\"next_topic\": \"프로젝트의 구체적인 요구사항과 제약사항\",\n\"conversation_context\": \"사용자는 전자금융 사고 대응 모의 훈련 시스텠을 구축하고 싶어한다.\",\n\"missing_info\": [\"프로젝트의 구체적인 요구사항\", \"프로젝트의 제약사항\", \"프로젝트의 예산\", \"프로젝트의 타임라인\", \"프로젝트의 이해관계자\"],\n\"question\": \"전자금융 사고 대응 모의 훈련 시스템을 구축하기 위해 필요한 구체적인 요구사항은 무엇인가요? 그리고 이 프로젝트에는 어떤 제약사항이 있나요?\"\n}",
+            "name": "analyze_purpose"
+          },
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 474,
+            "prompt_tokens": 763,
+            "total_tokens": 1237,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          },
+          "model_name": "gpt-4-0613",
+          "system_fingerprint": null,
+          "id": "chatcmpl-BIIgBPzgRIN7ubt3R5asPlvTy0zdQ",
+          "finish_reason": "function_call",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run-aa33fad8-300a-4ae1-b4b8-45bf70b8aca0-0",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 763,
+          "output_tokens": 474,
+          "total_tokens": 1237,
+          "input_token_details": {
+            "audio": 0,
+            "cache_read": 0
+          },
+          "output_token_details": {
+            "audio": 0,
+            "reasoning": 0
+          }
+        }
+      },
+      "timestamp": 1743701430.267324
+    },
+    {
+      "type": "conversation_analysis",
+      "state": {
+        "question": "프로젝트의 제약사항과 이해관계자에 대해 자세히 알려주실 수 있나요?",
+        "current_topic": "제약사항과 이해관계자에 대한 정보",
+        "last_question": "프로젝트의 제약사항과 이해관계자에 대해 자세히 알려주실 수 있나요?",
+        "follow_up_count": 1,
+        "extracted_info": {},
+        "missing_info": [
+          "제약사항",
+          "이해관계자"
+        ],
+        "conversation_context": "사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 5개월의 시간과 1억의 예산을 가지고 있습니다. 그리고 그는 시스템에 실시간 시뮬레이션, 사용자 인증, 보안 점검 기능이 필요하다고 말했습니다."
+      },
+      "result_data": {
+        "content": "",
+        "additional_kwargs": {
+          "function_call": {
+            "arguments": "{\n\"core_purpose\": \"전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하는 것\",\n\"problem_statement\": \"현재 전자금융 사고 대응에 대한 효과적인 모의 훈련 시스템이 없는 상황\",\n\"final_goal\": \"실시간 시뮬레이션, 사용자 인증, 보안 점검 기능을 갖춘 전자금융 사고 대응 모의 훈련 시스템을 5개월 내에 1억의 예산으로 구축하는 것\",\n\"key_objectives\": [\"실시간 시뮬레이션 기능 구현\", \"사용자 인증 기능 구현\", \"보안 점검 기능 구현\"],\n\"next_topic\": \"제약사항과 이해관계자에 대한 정보\",\n\"conversation_context\": \"사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 5개월의 시간과 1억의 예산을 가지고 있습니다. 그리고 그는 시스템에 실시간 시뮬레이션, 사용자 인증, 보안 점검 기능이 필요하다고 말했습니다.\",\n\"missing_info\": [\"제약사항\", \"이해관계자\"],\n\"question\": \"프로젝트의 제약사항과 이해관계자에 대해 자세히 알려주실 수 있나요?\"\n}",
+            "name": "analyze_purpose"
+          },
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 442,
+            "prompt_tokens": 919,
+            "total_tokens": 1361,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          },
+          "model_name": "gpt-4-0613",
+          "system_fingerprint": null,
+          "id": "chatcmpl-BIIhLLuKZyEV0kzJPqMSQL1k6nLPD",
+          "finish_reason": "function_call",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run-b7cfccd3-f682-4d6c-acfc-116cc5d9cf00-0",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 919,
+          "output_tokens": 442,
+          "total_tokens": 1361,
+          "input_token_details": {
+            "audio": 0,
+            "cache_read": 0
+          },
+          "output_token_details": {
+            "audio": 0,
+            "reasoning": 0
+          }
+        }
+      },
+      "timestamp": 1743701501.574679
+    },
+    {
+      "type": "question_generation",
+      "state": {
+        "question": "프로젝트의 제약사항과 이해관계자에 대해 자세히 알려주실 수 있나요?",
+        "current_topic": "제약사항과 이해관계자에 대한 정보",
+        "last_question": "프로젝트의 제약사항과 이해관계자에 대해 자세히 알려주실 수 있나요?",
+        "follow_up_count": 1,
+        "extracted_info": {},
+        "missing_info": [
+          "제약사항",
+          "이해관계자"
+        ],
+        "conversation_context": "사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 5개월의 시간과 1억의 예산을 가지고 있습니다. 그리고 그는 시스템에 실시간 시뮬레이션, 사용자 인증, 보안 점검 기능이 필요하다고 말했습니다."
+      },
+      "result_data": {
+        "content": "",
+        "additional_kwargs": {
+          "function_call": {
+            "arguments": "{\n\"core_purpose\": \"자연스러운 다음 질문을 생성하는 것\",\n\"problem_statement\": \"제약사항과 이해관계자에 대한 정보가 누락되어 있음\",\n\"final_goal\": \"사용자의 요구사항에 맞는 자연스러운 후속 질문을 생성하여 누락된 정보를 얻는 것\",\n\"key_objectives\": [\"이전 대화 맥락을 고려한 질문 생성\", \"누락된 중요 정보 우선 요청\", \"사용자의 이전 답변을 참조한 구체적인 후속 질문 생성\", \"대화가 자연스럽게 흐르도록 구성\"],\n\"next_topic\": \"제약사항과 이해관계자에 대한 정보\",\n\"conversation_context\": \"사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 5개월의 시간과 1억의 예산을 가지고 있습니다. 그리고 그는 시스템에 실시간 시뮬레이션, 사용자 인증, 보안 점검 기능이 필요하다고 말했습니다.\",\n\"missing_info\": [\"제약사항\", \"이해관계자\"],\n\"question\": \"프로젝트를 진행하는 데 있어 어떤 제약사항이 있는지, 그리고 이 프로젝트의 주요 이해관계자는 누구인지 알려주실 수 있나요?\"\n}",
+            "name": "analyze_purpose"
+          },
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 448,
+            "prompt_tokens": 901,
+            "total_tokens": 1349,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          },
+          "model_name": "gpt-4-0613",
+          "system_fingerprint": null,
+          "id": "chatcmpl-BIIhiTL0aeXFiepO6NLmdxGuziAZ7",
+          "finish_reason": "function_call",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run-1c493c9f-b683-4680-9e22-264beca00394-0",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 901,
+          "output_tokens": 448,
+          "total_tokens": 1349,
+          "input_token_details": {
+            "audio": 0,
+            "cache_read": 0
+          },
+          "output_token_details": {
+            "audio": 0,
+            "reasoning": 0
+          }
+        }
+      },
+      "timestamp": 1743701519.058452
+    },
+    {
+      "type": "conversation_analysis",
+      "state": {
+        "question": "프로젝트의 이해관계자에 대해 자세히 알려주실 수 있나요?",
+        "current_topic": "이해관계자에 대한 정보",
+        "last_question": "프로젝트의 이해관계자에 대해 자세히 알려주실 수 있나요?",
+        "follow_up_count": 1,
+        "extracted_info": {},
+        "missing_info": [
+          "이해관계자에 대한 정보"
+        ],
+        "conversation_context": "사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 실시간 시뮬레이션, 사용자 인증, 보안 점검 기능 등을 요구하고 있다. 프로젝트는 5개월 동안 진행되며, 예산은 1억이다. 제약사항으로는 실제 사고 수준의 보안 환경 구현, 민감한 정보 보호, 기관별 맞춤형 설계, 그리고 시스템 안정성 확보가 있다."
+      },
+      "result_data": {
+        "content": "",
+        "additional_kwargs": {
+          "function_call": {
+            "arguments": "{\n\"core_purpose\": \"전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하는 것\",\n\"problem_statement\": \"현재 전자금융 사고 대응에 대한 효과적인 모의 훈련 시스템이 없는 상황\",\n\"final_goal\": \"실시간 시뮬레이션, 사용자 인증, 보안 점검 기능을 갖춘 전자금융 사고 대응 모의 훈련 시스템을 5개월 내에 1억의 예산으로 구축하는 것\",\n\"key_objectives\": [\"실시간 시뮬레이션 구현\", \"사용자 인증 기능 구현\", \"보안 점검 기능 구현\", \"실제 사고 수준의 보안 환경 구현\", \"민감한 정보 보호\", \"기관별 맞춤형 설계\", \"시스템 안정성 확보\"],\n\"next_topic\": \"이해관계자에 대한 정보\",\n\"conversation_context\": \"사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 실시간 시뮬레이션, 사용자 인증, 보안 점검 기능 등을 요구하고 있다. 프로젝트는 5개월 동안 진행되며, 예산은 1억이다. 제약사항으로는 실제 사고 수준의 보안 환경 구현, 민감한 정보 보호, 기관별 맞춤형 설계, 그리고 시스템 안정성 확보가 있다.\",\n\"missing_info\": [\"이해관계자에 대한 정보\"],\n\"question\": \"프로젝트의 이해관계자에 대해 자세히 알려주실 수 있나요?\"\n}",
+            "name": "analyze_purpose"
+          },
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 545,
+            "prompt_tokens": 1184,
+            "total_tokens": 1729,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          },
+          "model_name": "gpt-4-0613",
+          "system_fingerprint": null,
+          "id": "chatcmpl-BIIiborzKfLUMHnu9dy9EYLzAAkYA",
+          "finish_reason": "function_call",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run-043a3e48-6bde-4895-beb0-b485f88aec2e-0",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 1184,
+          "output_tokens": 545,
+          "total_tokens": 1729,
+          "input_token_details": {
+            "audio": 0,
+            "cache_read": 0
+          },
+          "output_token_details": {
+            "audio": 0,
+            "reasoning": 0
+          }
+        }
+      },
+      "timestamp": 1743701581.599537
+    },
+    {
+      "type": "question_generation",
+      "state": {
+        "question": "프로젝트의 이해관계자에 대해 자세히 알려주실 수 있나요?",
+        "current_topic": "이해관계자에 대한 정보",
+        "last_question": "프로젝트의 이해관계자에 대해 자세히 알려주실 수 있나요?",
+        "follow_up_count": 1,
+        "extracted_info": {},
+        "missing_info": [
+          "이해관계자에 대한 정보"
+        ],
+        "conversation_context": "사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 실시간 시뮬레이션, 사용자 인증, 보안 점검 기능 등을 요구하고 있다. 프로젝트는 5개월 동안 진행되며, 예산은 1억이다. 제약사항으로는 실제 사고 수준의 보안 환경 구현, 민감한 정보 보호, 기관별 맞춤형 설계, 그리고 시스템 안정성 확보가 있다."
+      },
+      "result_data": {
+        "content": "",
+        "additional_kwargs": {
+          "function_call": {
+            "arguments": "{\n\"core_purpose\": \"자연스러운 다음 질문을 생성하는 것\",\n\"problem_statement\": \"이해관계자에 대한 정보가 누락되어 있어 이에 대한 질문을 생성해야 하는 상황\",\n\"final_goal\": \"이해관계자에 대한 정보를 얻는 것\",\n\"key_objectives\": [\"이전 대화 맥락을 고려한 질문 생성\", \"누락된 중요 정보 요청\", \"사용자의 이전 답변을 참조한 구체적인 후속 질문 생성\", \"대화가 자연스럽게 흐르도록 구성\"],\n\"next_topic\": \"이해관계자에 대한 정보\",\n\"conversation_context\": \"사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 실시간 시뮬레이션, 사용자 인증, 보안 점검 기능 등을 요구하고 있다. 프로젝트는 5개월 동안 진행되며, 예산은 1억이다. 제약사항으로는 실제 사고 수준의 보안 환경 구현, 민감한 정보 보호, 기관별 맞춤형 설계, 그리고 시스템 안정성 확보가 있다.\",\n\"missing_info\": [\"이해관계자에 대한 정보\"],\n\"question\": \"이 프로젝트에 관련된 주요 이해관계자는 누구인가요?\"\n}",
+            "name": "analyze_purpose"
+          },
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 441,
+            "prompt_tokens": 1026,
+            "total_tokens": 1467,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          },
+          "model_name": "gpt-4-0613",
+          "system_fingerprint": null,
+          "id": "chatcmpl-BIIizHH3Zn32BAgOijNCSaGPBQF53",
+          "finish_reason": "function_call",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run-5c0a5d27-db37-49d9-bfb1-872961a30ede-0",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 1026,
+          "output_tokens": 441,
+          "total_tokens": 1467,
+          "input_token_details": {
+            "audio": 0,
+            "cache_read": 0
+          },
+          "output_token_details": {
+            "audio": 0,
+            "reasoning": 0
+          }
+        }
+      },
+      "timestamp": 1743701603.809491
+    },
+    {
+      "type": "conversation_analysis",
+      "state": {
+        "question": "프로젝트의 세부 계획과 실행 전략은 어떻게 되나요? 그리고 이해관계자들의 역할과 책임은 무엇인가요?",
+        "current_topic": "프로젝트의 세부 계획 및 실행 전략에 대한 논의",
+        "last_question": "프로젝트의 세부 계획과 실행 전략은 어떻게 되나요? 그리고 이해관계자들의 역할과 책임은 무엇인가요?",
+        "follow_up_count": 1,
+        "extracted_info": {},
+        "missing_info": [
+          "프로젝트의 세부 계획",
+          "실행 전략",
+          "이해관계자의 역할 및 책임"
+        ],
+        "conversation_context": "사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 필요한 요구사항, 제약사항, 예산, 타임라인, 이해관계자 등에 대한 정보를 제공하였다."
+      },
+      "result_data": {
+        "content": "",
+        "additional_kwargs": {
+          "function_call": {
+            "arguments": "{\n\"core_purpose\": \"전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하는 것\",\n\"problem_statement\": \"현재 전자금융 사고 대응에 대한 효과적인 모의 훈련 시스템이 없는 상황\",\n\"final_goal\": \"실시간 시뮬레이션, 사용자 인증, 보안 점검 기능을 갖춘 전자금융 사고 대응 모의 훈련 시스템을 5개월 내에 1억의 예산으로 구축하는 것\",\n\"key_objectives\": [\"실시간 시뮬레이션 구현\", \"사용자 인증 기능 구현\", \"보안 점검 기능 구현\", \"실제 사고 수준의 보안 환경 구현\", \"민감한 정보 보호\", \"기관별 맞춤형 설계\", \"시스템 안정성 확보\"],\n\"next_topic\": \"프로젝트의 세부 계획 및 실행 전략에 대한 논의\",\n\"conversation_context\": \"사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 필요한 요구사항, 제약사항, 예산, 타임라인, 이해관계자 등에 대한 정보를 제공하였다.\",\n\"missing_info\": [\"프로젝트의 세부 계획\", \"실행 전략\", \"이해관계자의 역할 및 책임\"],\n\"question\": \"프로젝트의 세부 계획과 실행 전략은 어떻게 되나요? 그리고 이해관계자들의 역할과 책임은 무엇인가요?\"\n}",
+            "name": "analyze_purpose"
+          },
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 523,
+            "prompt_tokens": 1310,
+            "total_tokens": 1833,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          },
+          "model_name": "gpt-4-0613",
+          "system_fingerprint": null,
+          "id": "chatcmpl-BIIk2aNswpI5lyfgJKXp3PC6zVKKS",
+          "finish_reason": "function_call",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run-b41d1f79-48e0-423b-bed3-7efb8f58df0c-0",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 1310,
+          "output_tokens": 523,
+          "total_tokens": 1833,
+          "input_token_details": {
+            "audio": 0,
+            "cache_read": 0
+          },
+          "output_token_details": {
+            "audio": 0,
+            "reasoning": 0
+          }
+        }
+      },
+      "timestamp": 1743701671.024451
+    },
+    {
+      "type": "question_generation",
+      "state": {
+        "question": "프로젝트의 세부 계획과 실행 전략은 어떻게 되나요? 그리고 이해관계자들의 역할과 책임은 무엇인가요?",
+        "current_topic": "프로젝트의 세부 계획 및 실행 전략에 대한 논의",
+        "last_question": "프로젝트의 세부 계획과 실행 전략은 어떻게 되나요? 그리고 이해관계자들의 역할과 책임은 무엇인가요?",
+        "follow_up_count": 1,
+        "extracted_info": {},
+        "missing_info": [
+          "프로젝트의 세부 계획",
+          "실행 전략",
+          "이해관계자의 역할 및 책임"
+        ],
+        "conversation_context": "사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 필요한 요구사항, 제약사항, 예산, 타임라인, 이해관계자 등에 대한 정보를 제공하였다."
+      },
+      "result_data": {
+        "content": "",
+        "additional_kwargs": {
+          "function_call": {
+            "arguments": "{\n\"core_purpose\": \"자연스러운 다음 질문을 생성하는 것\",\n\"problem_statement\": \"프로젝트의 세부 계획, 실행 전략, 이해관계자의 역할 및 책임에 대한 정보가 누락되어 있음\",\n\"final_goal\": \"전자금융 사고 대응 모의 훈련 시스템 구축 프로젝트에 대한 세부 계획 및 실행 전략을 이해하고, 이해관계자의 역할 및 책임에 대한 정보를 얻는 것\",\n\"key_objectives\": [\"이전 대화 맥락을 고려한 자연스러운 질문 생성\", \"누락된 중요 정보 요청\", \"사용자의 이전 답변을 참조한 구체적인 후속 질문 생성\", \"대화가 자연스럽게 흐르도록 구성\"],\n\"next_topic\": \"프로젝트의 세부 계획 및 실행 전략\",\n\"conversation_context\": \"사용자는 전자금융 사고 대응 모의 훈련 시스템을 구축하고자 하며, 이를 위해 필요한 요구사항, 제약사항, 예산, 타임라인, 이해관계자 등에 대한 정보를 제공하였다.\",\n\"missing_info\": [\"프로젝트의 세부 계획\", \"실행 전략\", \"이해관계자의 역할 및 책임\"],\n\"question\": \"프로젝트의 세부 계획은 어떻게 되나요? 그리고 실행 전략은 어떤 것을 고려하고 있나요? 또한, 정보보안팀과 IT 인프라팀의 역할 및 책임은 구체적으로 어떻게 되나요?\"\n}",
+            "name": "analyze_purpose"
+          },
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 535,
+            "prompt_tokens": 964,
+            "total_tokens": 1499,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          },
+          "model_name": "gpt-4-0613",
+          "system_fingerprint": null,
+          "id": "chatcmpl-BIIkRC7jHK82TPHQCuZfeOQDRnVVS",
+          "finish_reason": "function_call",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run-5127a1e9-8a2e-4031-ba65-ab4b0321625e-0",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 964,
+          "output_tokens": 535,
+          "total_tokens": 1499,
+          "input_token_details": {
+            "audio": 0,
+            "cache_read": 0
+          },
+          "output_token_details": {
+            "audio": 0,
+            "reasoning": 0
+          }
+        }
+      },
+      "timestamp": 1743701695.712426
+    }
+  ],
+  "current_task": {},
+  "rag_results": [],
+  "timestamp": 1743700729.42259,
+  "metadata": {}
+}
