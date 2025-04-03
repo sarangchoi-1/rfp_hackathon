@@ -1,25 +1,70 @@
-from langchain_community.vectorstores import FAISS
-from langchain_openai import OpenAIEmbeddings
+import sys
+import os
+from pathlib import Path
+
+# Load environment variables from config/.env
+config_dir = Path(__file__).parent.parent / "config"
+env_path = config_dir / ".env"
+if env_path.exists():
+    from dotenv import load_dotenv
+    load_dotenv(env_path)
+else:
+    print(f"Warning: .env file not found at {env_path}")
+# Check for OpenAI API key
+if not os.getenv("OPENAI_API_KEY"):
+    raise ValueError("OPENAI_API_KEY environment variable is not set")
+
+try:
+    print("Attempting to import langchain_community...")
+    import langchain_community
+    print(f"langchain_community version: {langchain_community.__version__}")
+    from langchain_community.vectorstores import FAISS
+    print("Successfully imported langchain_community")
+    
+    print("Attempting to import langchain_openai...")
+    import langchain_openai
+    print("Successfully imported langchain_openai")
+    from langchain_openai import OpenAIEmbeddings
+    print("Successfully imported OpenAIEmbeddings")
+except ImportError as e:
+    print(f"Error importing required packages: {e}")
+    print(f"Current working directory: {os.getcwd()}")
+    print(f"Python executable: {sys.executable}")
+    print(f"Installed packages:")
+    os.system("pip list")
+    raise
+
+# Get the absolute path to the data directory
+DATA_DIR = Path(__file__).parent
+print(f"Data directory: {DATA_DIR}")
+
+
 embeddings = OpenAIEmbeddings()
-# 저장된 데이터를 로드
+print("Successfully initialized embeddings")
+
+print("Loading case database...")
+case_db_path = str(DATA_DIR / "vector_db_case")
+print(f"Case DB path: {case_db_path}")
 loaded_case_db = FAISS.load_local(
-    folder_path="./data/vector_db_case",
+    folder_path=case_db_path,
     embeddings=embeddings,
     allow_dangerous_deserialization=True,
     index_name="case_vector"
 )
+print("Successfully loaded case database")
 
+print("Loading criteria database...")
+criteria_db_path = str(DATA_DIR / "vector_db_criteria")
+print(f"Criteria DB path: {criteria_db_path}")
 loaded_criteria_db = FAISS.load_local(
-    folder_path="./data/vector_db_criteria",
+    folder_path=criteria_db_path,
     embeddings=embeddings,
     allow_dangerous_deserialization=True,
     index_name="criteria_vector"
 )
 
-
-_case_retriever = loaded_case_db.as_retriever(k=3)
+_case_retriever = loaded_case_db.as_retriever(k=5)
 _criteria_retriever = loaded_criteria_db.as_retriever(k=10)
-
 
 #각각의 데이터베이스를 기반으로 한 retriever 반환
 #QA체인 등을 만들때 retriever 인자로 사용
@@ -33,3 +78,4 @@ def get_criteria_retriever():
 #반환값은 Document 형식
 def double_retrieve(query):
     return _case_retriever.invoke(query)+_criteria_retriever.invoke(query)
+
